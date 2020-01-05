@@ -43,7 +43,7 @@ end
 
 Best = min(Safety);
 Choices = find(Safety == Best);
-fprintf('Leader''s smallest loss=%f for:\n', Best)
+fprintf('Leader''s safety level = %f for:\n', Best)
  for i = Choices
     fprintf('i=%i\n', i);
 end
