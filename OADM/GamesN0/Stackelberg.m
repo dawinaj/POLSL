@@ -23,7 +23,8 @@ wdth = size(Payoff1, 2);
 
 fprintf('  ###  ###   #    ##  # #  ###  #    ##   ###  ###   ##   \n  #     #   # #  #    # #  #    #    # #  #    # #  #     \n  ###   #   ###  #    ##   ##   #    ###  ##   ###  # ##  \n    #   #   # #  #    # #  #    #    # #  #    ##   #  #  \n  ###   #   # #   ##  # #  ###  ###  ##   ###  # #   ##   \n\n')
 
-Safety = zeros(hght, 1);
+Leader = zeros(1, hght);
+Follower = zeros(1, hght);
 for y = 1:hght
     MinLossFollower = min(Payoff2(y, 1:wdth));
     Resps = find(Payoff2(y, 1:wdth) == MinLossFollower);
@@ -36,14 +37,16 @@ for y = 1:hght
         fprintf('i=%i, j=%i; outcome=(%f, %f)\n', y, Resps(j), Payoff1(y, Resps(j)), MinLossFollower);
     end
     MaxLossLeader = max(Payoff1(y, Resps));
-%    Choices = find(Payoff1(y, Resps) == MaxLossLeader)
-    Safety(y) = MaxLossLeader;
-    fprintf('Max loss: %f\n\n', MaxLossLeader)
+    Leader(y) = MaxLossLeader;
+    Follower(y) = MinLossFollower;
+    fprintf('Leader''s worst outcome: (%f, %f)\n\n', MaxLossLeader, MinLossFollower)
 end
 
-Best = min(Safety);
-Choices = find(Safety == Best);
-fprintf('Leader''s safety level = %f for:\n', Best)
- for i = Choices
-    fprintf('i=%i\n', i);
+Best = min(Leader);
+Choices = find(Leader == Best);
+fprintf('Leader''s safest strategies:\n')
+for item = Choices
+    fprintf('i=%i\n', item)
+    fprintf('outcome=(%f, %f)\n', Best, Follower(item))
 end
+
