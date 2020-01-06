@@ -2,13 +2,13 @@ clear all
 clc
 
 Payoff1 = [
-    15  0
-    30  -15
+   1    0
+   0    1
 ]
 
 Payoff2 = [
-    20  30
-    10  0
+    0   1
+    1   0
 ]
 % ==================================================
 
@@ -68,18 +68,18 @@ MaxLosses = max(Payoff2, [], 1);
 MinLossP2 = min(MaxLosses);
 ChoicesP2 = find(MaxLosses==MinLossP2);
 fprintf('Player 1:\n')
-fprintf('MinLoss = %f for decisions:\n', MinLossP1)
+fprintf('Safety = %f for decisions:\n', MinLossP1)
 for y = ChoicesP1
     fprintf('i=%i\n', y)
 end
 fprintf('Player 2:\n')
-fprintf('MinLoss = %f for decisions:\n', MinLossP2)
+fprintf('Safety = %f for decisions:\n', MinLossP2)
 for x = ChoicesP2
     fprintf('j=%i\n', x)
 end
 fprintf('\n')
-for y = ChoicesP1
+for y = ChoicesP1.'
     for x = ChoicesP2
-        fprintf('i=%i, j=%i; outcome=(%f, %f)\n', y, x, MinLossP1, MinLossP2)
+        fprintf('i=%i, j=%i; safety=(%f, %f)\n', y, x, MinLossP1, MinLossP2)
     end
 end
