@@ -22,25 +22,26 @@ wdth = size(Payoff1, 2);
 % ============={ NASH }=============
 fprintf(' #   #   #   ###  # #\n ##  #  # #  #    # #\n # # #  ###  ###  ###\n #  ##  # #    #  # #\n #   #  # #  ###  # #\n\n')
 
-Nashes = zeros(0, 0);
+NashY = [];
+NashX = [];
 index = 1;
 for y = 1:hght
     for x = 1:wdth
         if Payoff1(y, x) == min(Payoff1(1:hght, x))
             if Payoff2(y, x) == min(Payoff2(y, 1:wdth))
-                Nashes(index, 1) = y;
-                Nashes(index, 2) = x;
+                NashY(index) = y;
+                NashX(index) = x;
                 index = index+1;
             end
         end
     end
 end
-for i = 1:size(Nashes, 1)
-    y = Nashes(i, 1);
-    x = Nashes(i, 2);
+for i = 1:length(NashY)
+    y = NashY(i);
+    x = NashX(i);
     feasible = true;
-    for t = 1:size(Nashes, 1)
-        if Payoff1(Nashes(t, 1), Nashes(t, 2)) < Payoff1(y, x) && Payoff2(Nashes(t, 1), Nashes(t, 2)) < Payoff2(y, x)
+    for t = 1:length(NashY)
+        if Payoff1(NashY(t), NashX(t)) < Payoff1(y, x) && Payoff2(NashY(t), NashX(t)) < Payoff2(y, x)
             feasible = false;
             break
         end
