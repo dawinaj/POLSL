@@ -33,8 +33,8 @@ for y = 1:hght
         fprintf('%i, ', Resps(r))
     end
     fprintf('%i};\n', Resps(r+1))
-    for j = 1:length(Resps)
-        fprintf('i=%i, j=%i; outcome=(%f, %f)\n', y, Resps(j), Payoff1(y, Resps(j)), MinLossFollower);
+    for j = Resps
+        fprintf('i=%i, j=%i; outcome=(%f, %f)\n', y, j, Payoff1(y, j), MinLossFollower);
     end
     MaxLossLeader = max(Payoff1(y, Resps));
     Leader(y) = MaxLossLeader;
