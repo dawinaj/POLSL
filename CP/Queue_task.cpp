@@ -15,10 +15,6 @@ public:
 		todo = t;
 	}
 	~task() {}
-	void print(ostream& out)
-	{
-		out << "Date: " << date << endl << "Task: " << todo << endl;
-	}
 	bool operator == (const task& obj)
 	{
 		return (date == obj.date && todo == obj.todo);
@@ -31,13 +27,10 @@ public:
 	{
 		return (date < obj.date);
 	}
-	bool operator >= (const task& obj)
+	friend ostream& operator << (ostream& out, const task& obj)
 	{
-		return (date >= obj.date);
-	}
-	bool operator <= (const task& obj)
-	{
-		return (date <= obj.date);
+		out << "Date: " << obj.date << endl << "Task: " << obj.todo << endl;
+		return out;
 	}
 };
 
@@ -47,35 +40,27 @@ public:
 	task task;
 	qel* next = nullptr;
 	qel* prev = nullptr;
-	qel()
-	{
-//		cout << "Ctor def called: " << this << endl;
-	}
-	qel(int d, string t) : task(d, t)
-	{
-//		cout << "Ctor task called: " << this << endl;
-	}
+	qel() {}
+	qel(int d, string t) : task(d, t) {}
 	qel(const qel& old)
 	{
-//		cout << "Ctor copy called: " << this << endl;
 		task = old.task;
 		if (old.next != nullptr)
 			next = new qel(*old.next);
 	}
 	~qel()
 	{
-//		cout << "Dtor called: " << this << endl;
 		if (next != nullptr)
 			delete next;
 	}
 	qel* drop_this()
 	{
-		if (this->next != nullptr)
-			this->next->prev = this->prev;
-		if (this->prev != nullptr)
-			this->prev->next = this->next;
+		if (next != nullptr)
+			next->prev = prev;
+		if (prev != nullptr)
+			prev->next = next;
 		qel* temp = next;
-		this->next = nullptr;
+		next = nullptr;
 		delete this;
 		return temp;
 	}
@@ -108,7 +93,7 @@ public:
 			first = new qel(*old.first);
 		return *this;
 	}
-	queue& operator=(queue && old) noexcept
+	queue& operator=(queue&& old) noexcept
 	{
 		swap(first, old.first);
 		return *this;
@@ -150,7 +135,7 @@ public:
 			qel* temp = first;
 			while (temp)
 			{
-				temp->task.print(cout);
+				cout << temp->task;
 				temp = temp->next;
 			}
 		}
@@ -187,7 +172,7 @@ public:
 			qel* temp = obj.first;
 			while (temp)
 			{
-				temp->task.print(out);
+				out << temp->task;
 				temp = temp->next;
 			}
 		}
@@ -225,7 +210,7 @@ public:
 			first = new qel(*old.first);
 		return *this;
 	}
-	sorted_q& operator=(sorted_q && old) noexcept
+	sorted_q& operator=(sorted_q&& old) noexcept
 	{
 		swap(first, old.first);
 		return *this;
@@ -258,7 +243,7 @@ public:
 			return obj;
 		}
 	}
-	friend ostream& operator << (ostream & out, const sorted_q & obj)
+	friend ostream& operator << (ostream& out, const sorted_q& obj)
 	{
 		if (obj.first == nullptr)
 			out << "Empty queue." << endl;
@@ -267,14 +252,14 @@ public:
 			qel* temp = obj.first;
 			while (temp)
 			{
-				temp->task.print(out);
+				out << temp->task;
 				temp = temp->next;
 			}
 		}
 		out << endl;
 		return out;
 	}
-	friend istream& operator >> (istream & in, sorted_q & obj)
+	friend istream& operator >> (istream& in, sorted_q& obj)
 	{
 		int d;
 		string t;
@@ -317,7 +302,7 @@ int main()
 	q.addTask(-42, "yeet");
 	q.addTask(-42, "yeet");
 	q.addTask(-42, "yeet");
-	q.print();
+	cout << q;
 
 
 	queue cpl;
@@ -325,10 +310,10 @@ int main()
 	cpl.addTask(-42, "yeet");
 	cpl.addTask(1024, "lmao");
 
-	cpl.print();
+	cout << cpl;
 
 	q.complete(cpl);
 
-	q.print();
+	cout << q;
 }
 
