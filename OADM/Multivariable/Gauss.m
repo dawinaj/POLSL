@@ -1,35 +1,47 @@
 clear all
 clc
 
-f = @(x) sin(x(1)-0.2)^2+sin(x(2)+0.3)^2;
-gf = @(x) [-2*sin(0.2-x(1))*cos(0.2-x(1)); 2*sin(x(2)+0.3)*cos(x(2)+0.3)];
+f  = @(p) sin(p(1)-0.2)^2+sin(p(2)+0.3)^2;
+gf = @(p) [-2*sin(0.2-p(1))*cos(0.2-p(1))   2*sin(p(2)+0.3)*cos(p(2)+0.3)];
 
 xMin = -1; xMax = 1;
 yMin = -1; yMax = 1;
 
-x0 = [0; 0];
+p0 = [0 0];
 
-iterations=0;
+%==============================================
+temp = sort([xMin, xMax]);
+[xMin, xMax] = deal(temp(1), temp(2));
+temp = sort([yMin, yMax]);
+[yMin, yMax] = deal(temp(1), temp(2));
+
+iters = 0;
+steps = 0;
+
 while true
-    
-    x0
-    x1 = x0;
-    for i = 1:size(x0)
-        d1 = zeros(size(x0));
-        d1(i) = 1;
-        
-        avect = sort([(xMin-x0(1))/d1(1), (yMin-x0(2))/d1(2), (xMax-x0(1))/d1(1), (yMax-x0(2))/d1(2)]);
-        alpha = fminbnd(@(a) f(x0+a*d1), avect(2), avect(3))
-        
-        x1 = x1+alpha*d1
+    p1 = p0;
+    for i = 1:length(p0)
+        fprintf('Current point: (%f, %f)\n', p0(1), p0(2));
+        d0 = zeros(1, length(p0));
+        d0(i) = 1;
+        fprintf('Current dir:   [%f, %f]\n', d0(1), d0(2));
+        aMin = nanmax((xMin-p1(1))/d0(1), (yMin-p1(2))/d0(2));
+        aMax = nanmin((xMax-p1(1))/d0(1), (yMax-p1(2))/d0(2));
+        if aMin <= aMax
+            alpha = fminbnd(@(a) f(p1+a*d0), aMin, aMax);
+        else
+            alpha = 0;
+        end
+        fprintf('\nAlpha: %f E <%f, %f>\n\n', alpha, aMin, aMax);
+        p1 = p1+alpha*d0;
+        steps = steps + 1;
     end
+    iters = iters + 1;
     
-    iterations = iterations+1;
-    
-    if (sqrt(sum(abs(x1-x0).^2)) < 0.001)
+    if (sqrt(sum(abs(p1-p0).^2)) < 0.001)
         break
     end
-    x0 = x1;
+    p0 = p1;
 end
 
-iterations
+fprintf('Minimization took %i iterations and %i steps.\n', iters, steps);
