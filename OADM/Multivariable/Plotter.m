@@ -9,8 +9,8 @@ yMin = -1; yMax = 1;
 %==============================================
 
 helper = @(x, y) f([x y]);
-[X, Y] = meshgrid(xMin:0.1:xMax, yMin:0.1:yMax);
+[X, Y] = meshgrid(xMin:0.01:xMax, yMin:0.01:yMax);
 Z = arrayfun(helper, X, Y);
+surf(X, Y, Z)
 colormap(jet)
 shading interp
-mesh(X, Y, Z, 'FaceAlpha', '0.5', 'FaceColor', 'flat')
