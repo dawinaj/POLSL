@@ -1,19 +1,16 @@
 clear all
 clc
 
-f  = @(p) sin(p(1)-0.2)^2+sin(p(2)+0.3)^2;
-gf = @(p) [-2*sin(0.2-p(1))*cos(0.2-p(1))   2*sin(p(2)+0.3)*cos(p(2)+0.3)];
+func = @(x, y) sin(x-0.2)^2+sin(y+0.3)^2;
+grad = @(x, y) [-2*sin(0.2-x)*cos(0.2-x)   2*sin(y+0.3)*cos(y+0.3)];
 
-xMin = -1; xMax = 1;
-yMin = -1; yMax = 1;
+Min = [-1 -1];
+Max = [ 1  1];
 
-p0 = [0 0];
-
+p0 = [0 1];
 %==============================================
-temp = sort([xMin, xMax]);
-[xMin, xMax] = deal(temp(1), temp(2));
-temp = sort([yMin, yMax]);
-[yMin, yMax] = deal(temp(1), temp(2));
+funchelper = @(p) func(p(1), p(2));
+gradhelper = @(p) grad(p(1), p(2));
 
 iters = 0;
 steps = 0;
@@ -21,19 +18,18 @@ steps = 0;
 while true
     p1 = p0;
     for i = 1:length(p0)
-        fprintf('Current point: (%f, %f)\n', p0(1), p0(2));
-        d0 = zeros(1, length(p0));
-        d0(i) = 1;
-        fprintf('Current dir:   [%f, %f]\n', d0(1), d0(2));
-        aMin = nanmax((xMin-p1(1))/d0(1), (yMin-p1(2))/d0(2));
-        aMax = nanmin((xMax-p1(1))/d0(1), (yMax-p1(2))/d0(2));
+        fprintf('Current point: (%f, %f)\n', p1);
+        d1 = zeros(1, length(p0));
+        d1(i) = 1;
+        fprintf('Current dir:   [%f, %f]\n', d1);
+        aMin = nanmax((Min-p1)./d1);
+        aMax = nanmin((Max-p1)./d1);
+        alpha = 0;
         if aMin <= aMax
-            alpha = fminbnd(@(a) f(p1+a*d0), aMin, aMax);
-        else
-            alpha = 0;
+            alpha = fminbnd(@(a) funchelper(p1+a*d1), aMin, aMax);
         end
         fprintf('\nAlpha: %f E <%f, %f>\n\n', alpha, aMin, aMax);
-        p1 = p1+alpha*d0;
+        p1 = p1+alpha*d1;
         steps = steps + 1;
     end
     iters = iters + 1;
