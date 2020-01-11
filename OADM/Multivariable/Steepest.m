@@ -19,8 +19,8 @@ while true
     fprintf('Current point: (%f, %f)\n', p0);
     d1 = -(gradhelper(p0));
     fprintf('Current dir:   [%f, %f]\n', d1);
-    aMin = nanmax(((Min(1)-p0(1))/d1(1))*(d1(1)>0)+((Max(1)-p0(1))/d1(1))*(d1(1)<0), ((Min(2)-p0(2))/d1(2))*(d1(2)>0)+((Max(2)-p0(2))/d1(2))*(d1(2)<0));
-    aMax = nanmin(((Min(1)-p0(1))/d1(1))*(d1(1)<0)+((Max(1)-p0(1))/d1(1))*(d1(1)>0), ((Min(2)-p0(2))/d1(2))*(d1(2)<0)+((Max(2)-p0(2))/d1(2))*(d1(2)>0));
+    aMin = nanmax(((Min(1)-p0(1))/d1(1))*(d1(1)>=0)+((Max(1)-p0(1))/d1(1))*(d1(1)<=0), ((Min(2)-p0(2))/d1(2))*(d1(2)>=0)+((Max(2)-p0(2))/d1(2))*(d1(2)<=0));
+    aMax = nanmin(((Min(1)-p0(1))/d1(1))*(d1(1)<=0)+((Max(1)-p0(1))/d1(1))*(d1(1)>=0), ((Min(2)-p0(2))/d1(2))*(d1(2)<=0)+((Max(2)-p0(2))/d1(2))*(d1(2)>=0));
     alpha = 0;
     if aMin <= aMax && ~isinf(aMin) && ~isinf(aMax)
         alpha = fminbnd(@(a) funchelper(p0+a*d1), min(aMax, aMin), max(aMax, aMin));
