@@ -76,7 +76,6 @@ while true
     p0 = p3;
     d1 = d2;
     d2 = d3;
-    pause(3);
 end
 
 fprintf('Minimization took %i iterations and %i steps.\n', iters, steps);
