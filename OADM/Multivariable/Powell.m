@@ -2,7 +2,6 @@ clear all
 clc
 
 func = @(x, y) sin(x-0.2)^2+sin(y+0.3)^2;
-grad = @(x, y) [-2*sin(0.2-x)*cos(0.2-x)   2*sin(y+0.3)*cos(y+0.3)];
 
 Min = [-1 -1];
 Max = [ 1  1];
@@ -11,7 +10,6 @@ p0 = [0 0];
 
 %==============================================
 funchelper = @(p) func(p(1), p(2));
-gradhelper = @(p) grad(p(1), p(2));
 
 iters = 0;
 steps = 0;
