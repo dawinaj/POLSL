@@ -2,7 +2,6 @@ clear all
 clc
 
 func = @(x, y) sin(x-0.2)^2+sin(y+0.3)^2;
-grad = @(x, y) [-2*sin(0.2-x)*cos(0.2-x)   2*sin(y+0.3)*cos(y+0.3)];
 
 Min = [-1 -1];
 Max = [ 1  1];
@@ -10,7 +9,6 @@ Max = [ 1  1];
 p0 = [0 1];
 %==============================================
 funchelper = @(p) func(p(1), p(2));
-gradhelper = @(p) grad(p(1), p(2));
 
 iters = 0;
 steps = 0;
@@ -25,7 +23,7 @@ while true
         aMin = nanmax((Min-p1)./d1);
         aMax = nanmin((Max-p1)./d1);
         alpha = 0;
-        if aMin <= aMax
+        if aMin <= aMax && ~isinf(aMin) && ~isinf(aMax)
             alpha = fminbnd(@(a) funchelper(p1+a*d1), aMin, aMax);
         end
         fprintf('\nAlpha: %f E <%f, %f>\n\n', alpha, aMin, aMax);
