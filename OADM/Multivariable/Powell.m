@@ -6,11 +6,10 @@ func = @(x, y) sin(x-0.2)^2+sin(y+0.3)^2;
 Min = [-1 -1];
 Max = [ 1  1];
 
-p0 = [0 0];
+p0 = [1 -1];
 
 %==============================================
 funchelper = @(p) func(p(1), p(2));
-
 iters = 0;
 steps = 0;
 
@@ -32,8 +31,8 @@ steps = steps+1;
 while true
     fprintf('Current point: (%f, %f)\n', p0);
     fprintf('Current dir:   [%f, %f]\n', d1);
-    aMin = nanmax((Min-p0)./d1);
-    aMax = nanmin((Max-p0)./d1);
+    aMin = nanmax(((Min(1)-p0(1))/d1(1))*(d1(1)>=0)+((Max(1)-p0(1))/d1(1))*(d1(1)<=0), ((Min(2)-p0(2))/d1(2))*(d1(2)>=0)+((Max(2)-p0(2))/d1(2))*(d1(2)<=0));
+    aMax = nanmin(((Min(1)-p0(1))/d1(1))*(d1(1)<=0)+((Max(1)-p0(1))/d1(1))*(d1(1)>=0), ((Min(2)-p0(2))/d1(2))*(d1(2)<=0)+((Max(2)-p0(2))/d1(2))*(d1(2)>=0));
     alpha = 0;
     if aMin <= aMax && ~isinf(aMin) && ~isinf(aMax)
         alpha = fminbnd(@(a) funchelper(p0+a*d1), aMin, aMax);
@@ -44,8 +43,8 @@ while true
     
     fprintf('Current point: (%f, %f)\n', p1);
     fprintf('Current dir:   [%f, %f]\n', d2);
-    aMin = nanmax((Min-p1)./d2);
-    aMax = nanmin((Max-p1)./d2);
+    aMin = nanmax(((Min(1)-p1(1))/d2(1))*(d2(1)>=0)+((Max(1)-p1(1))/d2(1))*(d2(1)<=0), ((Min(2)-p1(2))/d2(2))*(d2(2)>=0)+((Max(2)-p1(2))/d2(2))*(d2(2)<=0));
+    aMax = nanmin(((Min(1)-p1(1))/d2(1))*(d2(1)<=0)+((Max(1)-p1(1))/d2(1))*(d2(1)>=0), ((Min(2)-p1(2))/d2(2))*(d2(2)<=0)+((Max(2)-p1(2))/d2(2))*(d2(2)>=0));
     alpha = 0;
     if aMin <= aMax && ~isinf(aMin) && ~isinf(aMax)
         alpha = fminbnd(@(a) funchelper(p1+a*d2), aMin, aMax);
@@ -57,8 +56,8 @@ while true
     d3 = p2 - p0;
     fprintf('Current point: (%f, %f)\n', p2);
     fprintf('Current dir:   [%f, %f]\n', d3);
-    aMin = nanmax((Min-p2)./d3);
-    aMax = nanmin((Max-p2)./d3);
+    aMin = nanmax(((Min(1)-p2(1))/d3(1))*(d3(1)>=0)+((Max(1)-p2(1))/d3(1))*(d3(1)<=0), ((Min(2)-p2(2))/d3(2))*(d3(2)>=0)+((Max(2)-p2(2))/d3(2))*(d3(2)<=0));
+    aMax = nanmin(((Min(1)-p2(1))/d3(1))*(d3(1)<=0)+((Max(1)-p2(1))/d3(1))*(d3(1)>=0), ((Min(2)-p2(2))/d3(2))*(d3(2)<=0)+((Max(2)-p2(2))/d3(2))*(d3(2)>=0));
     alpha = 0;
     if aMin <= aMax && ~isinf(aMin) && ~isinf(aMax)
         alpha = fminbnd(@(a) funchelper(p2+a*d3), aMin, aMax);
@@ -76,4 +75,5 @@ while true
     d2 = d3;
 end
 
+fprintf('Final point: (%f, %f)\n', p3);
 fprintf('Minimization took %i iterations and %i steps.\n', iters, steps);
