@@ -30,14 +30,15 @@ pair<double, double> bound(vector<double> coeffs)
 	double b = 1;
 	double a = 1;
 	//===== B =====//
-	bool corr = false;
+	bool corr = true;
 	do
 	{
 		corr = true;
 		double prev = 0;
+		double temp = 0;
 		for (size_t i = 0; i < coeffs.size(); ++i)
 		{
-			double temp = coeffs[i] + prev;
+			temp = coeffs[i] + prev;
 			if (temp < 0)
 			{
 				b += 1;
@@ -46,8 +47,16 @@ pair<double, double> bound(vector<double> coeffs)
 			}
 			prev = b * temp;
 		}
+		if (corr && temp == 0)
+		{
+			b += 1;
+			corr = false;
+		}
 	}
 	while (!corr);
+
+
+
 
 	//===== A =====//
 
@@ -58,10 +67,11 @@ pair<double, double> bound(vector<double> coeffs)
 	{
 		corr = true;
 		double prev = 0;
+		double temp = 0;
 		for (size_t i = 0; i < coeffs.size(); ++i)
 		{
-			double temp = coeffs[i] + prev;
-			if (temp <= 0)
+			temp = coeffs[i] + prev;
+			if (temp < 0)
 			{
 				a += 1;
 				corr = false;
@@ -69,8 +79,12 @@ pair<double, double> bound(vector<double> coeffs)
 			}
 			prev = a * temp;
 		}
-	}
-	while (!corr);
+		if (corr && temp == 0)
+		{
+			a += 1;
+			corr = false;
+		}
+	} while (!corr);
 
 	return pair<double, double>(-a, b);
 }
