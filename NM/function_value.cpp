@@ -29,6 +29,7 @@ pair<double, double> bound(vector<double> coeffs)
 
 	double b = 1;
 	double a = 1;
+
 	//===== B =====//
 	bool corr = true;
 	do
@@ -52,17 +53,11 @@ pair<double, double> bound(vector<double> coeffs)
 			b += 1;
 			corr = false;
 		}
-	}
-	while (!corr);
-
-
-
+	} while (!corr);
 
 	//===== A =====//
-
 	for (size_t i = 0; i < coeffs.size(); ++i) // rotate polynomial by X and Z-axes
 		coeffs[i] *= pow(-1, i);
-	
 	do
 	{
 		corr = true;
@@ -89,6 +84,20 @@ pair<double, double> bound(vector<double> coeffs)
 	return pair<double, double>(-a, b);
 }
 
+double etoxestimator(double x)
+{
+	double sum = 1;
+	double ele = 1;
+	int i = 1;
+	while (ele >= sum*numeric_limits<double>::epsilon())
+	{
+		ele *= x / i;
+		sum += ele;
+//		cout << ele << endl << sum << endl << endl;
+		++i;
+	}
+	return sum;
+}
 
 int main()
 {
@@ -98,7 +107,10 @@ int main()
 	cout << "Regular value: " << values.first << endl;
 	cout << "Horner  value: " << values.second << endl;
 	cout << endl;
-	pair<double,double> bounds = bound(coeffs);
+	pair<double, double> bounds = bound(coeffs);
 	cout << "Lower bound: " << bounds.first << endl;
-	cout << "Upper bound: "<< bounds.second << endl;
+	cout << "Upper bound: " << bounds.second << endl;
+
+	double x = 500;
+	cout << "Approximation at x=" << x << " of e^x=" << etoxestimator(x) << endl;
 }
