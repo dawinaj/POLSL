@@ -84,15 +84,18 @@ pair<double, double> bound(vector<double> coeffs)
 	return pair<double, double>(-a, b);
 }
 
-double etoxestimator(double x)
+double cosxestimator(double x, double e = numeric_limits<double>::epsilon())
 {
 	double sum = 1;
 	double ele = 1;
 	int i = 1;
-	while (ele >= sum*numeric_limits<double>::epsilon())
+	while (abs(ele) >= abs(sum*e))
 	{
-		ele *= x / i;
-		sum += ele;
+		ele *= x / (2*i-1) * x / (2*i);
+		if (i & 1)
+			sum -= ele;
+		else
+			sum += ele;
 //		cout << ele << endl << sum << endl << endl;
 		++i;
 	}
@@ -111,6 +114,6 @@ int main()
 	cout << "Lower bound: " << bounds.first << endl;
 	cout << "Upper bound: " << bounds.second << endl;
 
-	double x = 500;
-	cout << "Approximation at x=" << x << " of e^x=" << etoxestimator(x) << endl;
+	double x = 3.14159/4;
+	cout << "Approximation at x=" << x << " of cos(x)=" << cosxestimator(x) << endl;
 }
