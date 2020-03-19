@@ -25,10 +25,10 @@ function [rA, rb, X] = GaussElim(A, b)
     Xtmp = zeros(w, 1);
     X = Xtmp;
     for p = 1:(h-1)
-        disp(A)
-        disp(Xpos)
-        disp(b)
-        [maxY, maxX] = maxelem(abs(A), p, h, p, w)
+%        disp(A)
+%        disp(Xpos)
+%        disp(b)
+        [maxY, maxX] = maxelem(abs(A), p, h, p, w);
         %swap row
         if maxY ~= p
             temp = A(p, :);
@@ -47,9 +47,9 @@ function [rA, rb, X] = GaussElim(A, b)
             Xpos(p) = Xpos(maxX);
             Xpos(maxX) = temp;
         end
-        disp(A)
-        disp(Xpos)
-        disp(b)
+%        disp(A)
+%        disp(Xpos)
+%        disp(b)
         for y = (p+1):h
             ratio = A(y, p)/A(p, p);
             for x = p:w
@@ -57,7 +57,7 @@ function [rA, rb, X] = GaussElim(A, b)
             end
             b(y) = b(y) - ratio*b(p);
         end
-        fprintf('======================================================\n');
+%        fprintf('======================================================\n');
     end
     for p = h:-1:1
         if A(p, p) == 0
@@ -71,7 +71,6 @@ function [rA, rb, X] = GaussElim(A, b)
         Xtmp(p) = temp/A(p, p);
     end
     for p = 1:h
-        fprintf('%i = %f\n', Xpos(p), Xtmp(p));
         X(Xpos(p)) = Xtmp(p);
     end
     rA = A;
