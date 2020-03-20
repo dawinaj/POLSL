@@ -102,3 +102,4 @@ function [ry, rx] = maxelem(Arr, miny, maxy, minx, maxx)
     ry = ty;
     rx = tx;
 end
+
