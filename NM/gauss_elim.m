@@ -33,7 +33,7 @@ function [A, b, X, L] = GaussElimSolve(A, b)
     for p = 1:h
         [maxY, maxX] = maxelem(abs(A), p, h, p, w); %find coords of max abs el in nonreduced part
         
-        %====={ Swap pivot row }=====%
+        %====={ Swap row }=====%
         if maxY ~= p
             temp = A(p, :);       % \
             A(p, :) = A(maxY, :); %  } swap rows in A
@@ -43,7 +43,7 @@ function [A, b, X, L] = GaussElimSolve(A, b)
             b(maxY) = temp; % /
         end
         
-        %====={ Swap pivot col }=====%
+        %====={ Swap col }=====%
         if maxX ~= p
             temp = A(:, p);       % \
             A(:, p) = A(:, maxX); %  } swap cols in A
