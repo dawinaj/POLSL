@@ -1,17 +1,18 @@
 clear all
 clc
 
-A = [1 3 2
-     2 7 7
-     2 5 2];
+A = [5,  1, -3
+     2,  8,  2
+    -2,  1,  7];
 
-b = [2
-     -1
-     7];
+b = [-3
+     5
+    -10];
 
-X = IterSolve(A, b)
+X = IterSolve(A, b, 1e-4, 20)
 
-function X = IterSolve(A, b)
+function X = IterSolve(A, b, eps, n)
+    %====={ sanity check }=====%
     h = size(A, 1);
     w = size(A, 2);
     if w ~= h
@@ -20,13 +21,14 @@ function X = IterSolve(A, b)
     if h ~= length(b)
        error('Length of b isnt equal to height of A')
     end
-    TempAug = [A,b];
     if rank(A) < h
        error('Infinitely many solutions')
     end
-    if rank(A) < rank(TempAug)
+    if rank(A) < rank([A,b])
       error('Inconsistent matrix')
     end
+    
+    %====={ create g and H }=====%
     H = zeros(h, w);
     g = zeros(h, 1);
     for y = 1:h
@@ -39,14 +41,20 @@ function X = IterSolve(A, b)
             end
         end
     end
+    
+    %====={ final tests }=====%
     X = g;
-    disp(g)
-    disp(H)
-    if norm(H) > 1
-        error('No U');
+    if norm(H) >= 1
+        error('Norm >= 1, does not converge!');
     end
-    for it = 1:10
+    
+    %====={ iteration }=====%
+    for it = 1:n
+        Xtmp = X;
         X = g + H * X;
+        if (norm(X - Xtmp) < eps)
+            break;
+        end
     end
     return;
 end
