@@ -13,7 +13,7 @@ b = [2
 
 
 function [A, b, X, L] = GaussElimSolve(A, b)
-    %====={ sanity check }=====%
+    %====={ Sanity check }=====%
     h = size(A, 1);
     w = size(A, 2);
     if w ~= h
@@ -23,7 +23,7 @@ function [A, b, X, L] = GaussElimSolve(A, b)
         error('Length of b isnt equal to height of A')
     end
     
-    %====={ storages }=====%
+    %====={ Storages }=====%
     Xpos = (1:w)';      %stores positions during pivoting
     Xtmp = zeros(w, 1); %stores values
     X = Xtmp;           %return values
@@ -102,4 +102,3 @@ function [ry, rx] = maxelem(Arr, miny, maxy, minx, maxx)
     ry = ty;
     rx = tx;
 end
-
