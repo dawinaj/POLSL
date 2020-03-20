@@ -9,10 +9,10 @@ b = [2
      -1
      7];
 
-[A, b, x] = GaussElimSolve(A, b)
+[A, b, x, L] = GaussElimSolve(A, b)
 
 
-function [rA, rb, X] = GaussElimSolve(A, b)
+function [A, b, X, L] = GaussElimSolve(A, b)
     %====={ sanity check }=====%
     h = size(A, 1);
     w = size(A, 2);
@@ -23,13 +23,14 @@ function [rA, rb, X] = GaussElimSolve(A, b)
         error('Length of b isnt equal to height of A')
     end
     
-    %====={ vectors }=====%
+    %====={ storages }=====%
     Xpos = (1:w)';      %stores positions during pivoting
     Xtmp = zeros(w, 1); %stores values
     X = Xtmp;           %return values
+    L = zeros(h, w);    %lower triangular
     
     %====={ Gauss elimination }=====%
-    for p = 1:(h-1)
+    for p = 1:h
         [maxY, maxX] = maxelem(abs(A), p, h, p, w); %find coords of max abs el in nonreduced part
         
         %====={ Swap pivot row }=====%
@@ -53,8 +54,10 @@ function [rA, rb, X] = GaussElimSolve(A, b)
         end
         
         %====={ Actual eliminaton }=====%
+        L(p, p) = 1;
         for y = (p+1):h
             ratio = A(y, p)/A(p, p); % find ratio of rows
+            L(y, p) = ratio;
             for x = p:w
                 A(y, x) = A(y, x) - ratio*A(p, x); % subtract rows
             end
@@ -81,8 +84,7 @@ function [rA, rb, X] = GaussElimSolve(A, b)
     end
     
     %====={ Return }=====%
-    rA = A;
-    rb = b;
+    return;
 end
 
 %====={ Function for finding max element in matrix with given boundaries }=====%
