@@ -1,22 +1,47 @@
 clear all
 clc
 
-[Xi, Yi] = interpolate(0, 2*pi, 5, 2)
-
-function [Xs, Ys] = interpolate(a, b, n, zeta)
-    Xs = eqDistNodes(a, b, n);    % get nodes
-    Ys = arrayfun(@(x) f(x), Xs); % get values at nodes
-    A = vander(Xs)                % create vander-someone matrix
-    coeffs = linsolve(A, Ys')     % solve A*coeffs = Ys
-    pts = a:0.1:b;
-    plot(pts, arrayfun(@(x) polyval(coeffs, x), pts))
-    hold on
-    plot(pts, arrayfun(@(x) f(x), pts))
-    hold off
-end
+[Xi, Wn] = lagrangeInterpolation(-10, 10, 10, 3)
 
 function y = f(x)
     y = cos(x);
+end
+
+function [Xs, Wn] = lagrangeInterpolation(a, b, n, zeta)
+    Xs = eqDistNodes(a, b, n);    % get nodes
+    Ys = arrayfun(@(x) f(x), Xs); % get values at nodes
+    Wn = sum(arrayfun(@(i) lagrPolyn(i, zeta, Xs)*Ys(i+1), 0:n)); % value of interpolation at zeta
+
+    pts = a:((b-a)/100):b;
+    hold on
+    plot(pts, arrayfun(@(x) f(x), pts))
+    plot(pts, arrayfun(@(x) sum(arrayfun(@(i) lagrPolyn(i, x, Xs)*Ys(i+1), 0:n)), pts))
+    hold off
+end
+
+function Pin = lagrPolyn(i, x, Xs)
+    if i > length(Xs)
+       error('i must be inside nodes interval')
+    end
+    Pin = 1;
+    for it = [0:(i-1), (i+1):(length(Xs)-1)]
+%        fprintf('%f / %f\n', (x-Xs(it+1)), (Xs(i+1)-Xs(it+1)))
+        Pin = Pin * (x-Xs(it+1)) / (Xs(i+1)-Xs(it+1));
+    end
+end
+
+function [Xs, Wn] = monomialInterpolation(a, b, n, zeta)
+    Xs = eqDistNodes(a, b, n);    % get nodes
+    Ys = arrayfun(@(x) f(x), Xs); % get values at nodes
+    A = vander(Xs)                % create vandermonde matrix
+    coeffs = linsolve(A, Ys')     % solve A*coeffs = Ys
+    Wn = polyval(coeffs, zeta);   % value of interpolation at zeta
+    
+    pts = a:((b-a)/100):b;
+    hold on
+    plot(pts, arrayfun(@(x) f(x), pts))
+    plot(pts, arrayfun(@(x) polyval(coeffs, x), pts))
+    hold off
 end
 
 function nodes = eqDistNodes(a, b, n)
