@@ -1,13 +1,13 @@
 clear all
 clc
 
-A = [1 3 2
-     2 7 7
-     2 5 2];
+A = [ 3, -2,  1
+      1, -3,  2
+     -1,  2,  4];
 
-b = [2
-     -1
-     7];
+b = [1
+     -7
+     2];
 
 [A, b, x, L] = GaussElimSolve(A, b)
 
@@ -89,16 +89,14 @@ end
 
 %====={ Function for finding max element in matrix with given boundaries }=====%
 function [ry, rx] = maxelem(Arr, miny, maxy, minx, maxx)
-    ty = miny;
-    tx = maxy;
+    ry = miny;
+    rx = minx;
     for y = miny:maxy
         for x = minx:maxx
-            if Arr(y, x) > Arr(ty, tx)
-                ty = y;
-                tx = x;
+            if Arr(y, x) > Arr(ry, rx)
+                ry = y;
+                rx = x;
             end
         end
     end
-    ry = ty;
-    rx = tx;
 end
