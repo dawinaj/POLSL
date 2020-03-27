@@ -26,6 +26,7 @@ for i = 1:length(pts)
    vals(i) = abs(vals(i)-f(pts(i)));
 end
 plot(pts, vals)
+fprintf('Max error for Equidistant Monomial: %f\n', max(vals));
 hold off
 
 subplot(2,4,2) % chebyshev monomial approximation
@@ -45,6 +46,7 @@ for i = 1:length(pts)
    vals(i) = abs(vals(i)-f(pts(i)));
 end
 plot(pts, vals)
+fprintf('Max error for Chebyshev Monomial: %f\n', max(vals));
 hold off
 
 subplot(2,4,3) % equidistant lagrange approximation
@@ -64,6 +66,7 @@ for i = 1:length(pts)
    vals(i) = abs(vals(i)-f(pts(i)));
 end
 plot(pts, vals)
+fprintf('Max error for Equidistant Lagrange: %f\n', max(vals));
 hold off
 
 subplot(2,4,4) % chebyshev lagrange approximation
@@ -83,6 +86,7 @@ for i = 1:length(pts)
    vals(i) = abs(vals(i)-f(pts(i))); 
 end
 plot(pts, vals)
+fprintf('Max error for Chebyshev Lagrange: %f\n', max(vals));
 hold off
 
 
