@@ -21,7 +21,7 @@ plot(pts, vals)
 hold off
 subplot(2,4,5) % equidistant monomial approximation error
 hold on
-title('Monomial eqDist E:')
+title('Monomial eqDist Err:')
 for i = 1:length(pts)
    vals(i) = abs(vals(i)-f(pts(i)));
 end
@@ -41,7 +41,7 @@ plot(pts, vals)
 hold off
 subplot(2,4,6) % chebyshev monomial approximation error
 hold on
-title('Monomial Cheb E:')
+title('Monomial Cheb Err:')
 for i = 1:length(pts)
    vals(i) = abs(vals(i)-f(pts(i)));
 end
@@ -61,7 +61,7 @@ plot(pts, vals)
 hold off
 subplot(2,4,7) % equidistant lagrange approximation error
 hold on
-title('Lagrange eqDist E:')
+title('Lagrange eqDist Err:')
 for i = 1:length(pts)
    vals(i) = abs(vals(i)-f(pts(i)));
 end
@@ -81,7 +81,7 @@ plot(pts, vals)
 hold off
 subplot(2,4,8) % chebyshev lagrange approximation error
 hold on
-title('Lagrange Cheb E:')
+title('Lagrange Cheb Err:')
 for i = 1:length(pts)
    vals(i) = abs(vals(i)-f(pts(i))); 
 end
