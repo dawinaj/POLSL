@@ -8,7 +8,7 @@ function y = f(x)
 end
 
 function [Xs, Wn] = lagrangeInterpolation(a, b, n, zeta)
-    Xs = eqDistNodes(a, b, n);    % get nodes
+    Xs = ChebyshevNodes(a, b, n);    % get nodes
     Ys = arrayfun(@(x) f(x), Xs); % get values at nodes
     Wn = sum(arrayfun(@(i) lagrPolyn(i, zeta, Xs)*Ys(i+1), 0:n)); % value of interpolation at zeta
 
