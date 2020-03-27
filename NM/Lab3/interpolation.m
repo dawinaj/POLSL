@@ -3,13 +3,13 @@ clc
 
 a = -10;
 b = 10;
-n = 12;
+n = 6;
 z = 3;
 
 pts = a:((b-a)/100):b;
     
 figure;
-subplot(2,4,1)
+subplot(2,4,1) % equidistant monomial approximation
 hold on
 title('Monomial eqDist:')
 plot(pts, arrayfun(@(x) f(x), pts))
@@ -19,7 +19,7 @@ for i = 1:length(pts)
 end
 plot(pts, vals)
 hold off
-subplot(2,4,5)
+subplot(2,4,5) % equidistant monomial approximation error
 hold on
 title('Monomial eqDist E:')
 for i = 1:length(pts)
@@ -28,7 +28,7 @@ end
 plot(pts, vals)
 hold off
 
-subplot(2,4,2)
+subplot(2,4,2) % chebyshev monomial approximation
 hold on
 title('Monomial Cheb:')
 plot(pts, arrayfun(@(x) f(x), pts))
@@ -38,7 +38,7 @@ for i = 1:length(pts)
 end
 plot(pts, vals)
 hold off
-subplot(2,4,6)
+subplot(2,4,6) % chebyshev monomial approximation error
 hold on
 title('Monomial Cheb E:')
 for i = 1:length(pts)
@@ -47,7 +47,7 @@ end
 plot(pts, vals)
 hold off
 
-subplot(2,4,3)
+subplot(2,4,3) % equidistant lagrange approximation
 hold on
 title('Lagrange eqDist:')
 plot(pts, arrayfun(@(x) f(x), pts))
@@ -57,7 +57,7 @@ for i = 1:length(pts)
 end
 plot(pts, vals)
 hold off
-subplot(2,4,7)
+subplot(2,4,7) % equidistant lagrange approximation error
 hold on
 title('Lagrange eqDist E:')
 for i = 1:length(pts)
@@ -66,7 +66,7 @@ end
 plot(pts, vals)
 hold off
 
-subplot(2,4,4)
+subplot(2,4,4) % chebyshev lagrange approximation
 hold on
 title('Lagrange Cheb:')
 plot(pts, arrayfun(@(x) f(x), pts))
@@ -76,11 +76,11 @@ for i = 1:length(pts)
 end
 plot(pts, vals)
 hold off
-subplot(2,4,8)
+subplot(2,4,8) % chebyshev lagrange approximation error
 hold on
 title('Lagrange Cheb E:')
 for i = 1:length(pts)
-   vals(i) = abs(vals(i)-f(pts(i)));
+   vals(i) = abs(vals(i)-f(pts(i))); 
 end
 plot(pts, vals)
 hold off
@@ -88,7 +88,7 @@ hold off
 
 
 function y = f(x)
-    y = x^4;
+    y = abs(x);
 end
 
 function [Xs, Wn] = eqDistLagrange(a, b, n, zeta)
