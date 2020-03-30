@@ -3,11 +3,11 @@ clc
 
 a = -10;
 b = 10;
-n = 6;
+n = 10;
 z = 3;
 
 pts = a:((b-a)/100):b;
-    
+   
 figure;
 subplot(2,4,1) % equidistant monomial approximation
 hold on
