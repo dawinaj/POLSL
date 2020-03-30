@@ -3,11 +3,56 @@ clc
 
 a = -10;
 b = 10;
-n = 10;
-z = 3;
+nv = [5 10 15 20 25 30];
 
 pts = a:((b-a)/100):b;
-   
+
+fvals = arrayfun(@(x) f(x), pts);
+figure;
+
+subplot(2,2,1)
+hold on
+title('eqDist:')
+plot(pts, fvals, 'DisplayName', '|x|')
+for n = nv
+    [~, vals] = eqDistMonomial(a, b, n, pts);
+    plot(pts, vals, 'DisplayName', strcat('n=', num2str(n)))
+end
+hold off
+legend
+subplot(2,2,3)
+hold on
+title('eqDist error:')
+plot(pts, zeros(1, length(pts)), 'DisplayName', 'real')
+for n = nv
+    [~, vals] = eqDistMonomial(a, b, n, pts);
+    plot(pts, abs(vals - fvals), 'DisplayName', strcat('n=', num2str(n)))
+end
+hold off
+legend
+
+subplot(2,2,2)
+hold on
+title('Chebyshev:')
+plot(pts, fvals, 'DisplayName', '|x|')
+for n = nv
+    [~, vals] = ChebyshevMonomial(a, b, n, pts);
+    plot(pts, vals, 'DisplayName', strcat('n=', num2str(n)))
+end
+hold off
+legend
+subplot(2,2,4)
+hold on
+title('Chebyshev error:')
+plot(pts, zeros(1, length(pts)), 'DisplayName', 'real')
+for n = nv
+    [~, vals] = ChebyshevMonomial(a, b, n, pts);
+    plot(pts, abs(vals - fvals), 'DisplayName', strcat('n=', num2str(n)))
+end
+hold off
+legend
+
+%{
 figure;
 subplot(2,4,1) % equidistant monomial approximation
 hold on
@@ -88,7 +133,7 @@ end
 plot(pts, vals)
 fprintf('Max error for Chebyshev Lagrange: %f\n', max(vals));
 hold off
-
+%}
 
 
 function y = f(x)
@@ -98,13 +143,13 @@ end
 function [Xs, Wn] = eqDistLagrange(a, b, n, zeta)
     Xs = eqDistNodes(a, b, n);    % get nodes
     Ys = arrayfun(@(x) f(x), Xs); % get values at nodes
-    Wn = sum(arrayfun(@(i) lagrPolyn(i, zeta, Xs)*Ys(i+1), 0:n)); % value of interpolation at zeta
+    Wn = arrayfun(@(z) sum(arrayfun(@(i) lagrPolyn(i, z, Xs)*Ys(i+1), 0:n)), zeta); % value of interpolation at zetas
 end
 
 function [Xs, Wn] = ChebyshevLagrange(a, b, n, zeta)
     Xs = ChebyshevNodes(a, b, n); % get nodes
     Ys = arrayfun(@(x) f(x), Xs); % get values at nodes
-    Wn = sum(arrayfun(@(i) lagrPolyn(i, zeta, Xs)*Ys(i+1), 0:n)); % value of interpolation at zeta
+    Wn = arrayfun(@(z) sum(arrayfun(@(i) lagrPolyn(i, z, Xs)*Ys(i+1), 0:n)), zeta); % value of interpolation at zetas
 end
 
 function Pin = lagrPolyn(i, x, Xs)
@@ -122,14 +167,14 @@ function [Xs, Wn] = eqDistMonomial(a, b, n, zeta)
     Ys = arrayfun(@(x) f(x), Xs); % get values at nodes
     A = vander(Xs);               % create vandermonde matrix
     coeffs = linsolve(A, Ys');    % solve A*coeffs = Ys
-    Wn = polyval(coeffs, zeta);   % value of interpolation at zeta
+    Wn = arrayfun(@(z) polyval(coeffs, z), zeta); % value of interpolation at zetas
 end
 function [Xs, Wn] = ChebyshevMonomial(a, b, n, zeta)
     Xs = ChebyshevNodes(a, b, n); % get nodes
     Ys = arrayfun(@(x) f(x), Xs); % get values at nodes
     A = vander(Xs);               % create vandermonde matrix
     coeffs = linsolve(A, Ys');    % solve A*coeffs = Ys
-    Wn = polyval(coeffs, zeta);   % value of interpolation at zeta
+    Wn = arrayfun(@(z) polyval(coeffs, z), zeta); % value of interpolation at zetas
 end
 
 function nodes = eqDistNodes(a, b, n)
