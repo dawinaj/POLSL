@@ -27,6 +27,9 @@ plot(pts, zeros(1, length(pts)), 'DisplayName', 'real')
 for n = nv
     [~, vals] = eqDistMonomial(a, b, n, pts);
     plot(pts, abs(vals - fvals), 'DisplayName', strcat('n=', num2str(n)))
+    [ymax, idx] = max(abs(vals - fvals));
+    xmax = pts(idx);
+    fprintf("N=%i, Emax=%f at x=%f, f(x)=%f\n", n, ymax, xmax, fvals(idx));
 end
 hold off
 legend
@@ -48,6 +51,9 @@ plot(pts, zeros(1, length(pts)), 'DisplayName', 'real')
 for n = nv
     [~, vals] = ChebyshevMonomial(a, b, n, pts);
     plot(pts, abs(vals - fvals), 'DisplayName', strcat('n=', num2str(n)))
+    [ymax, idx] = max(abs(vals - fvals));
+    xmax = pts(idx);
+    fprintf("N=%i, Emax=%f at x=%f, f(x)=%f\n", n, ymax, xmax, fvals(idx));
 end
 hold off
 legend
