@@ -1,21 +1,21 @@
 clear all
 clc
 
-n = 2
-h = 1
+n = 3
+h = 0.01
 %x = 0
 
 % plot the function, 1st and 2nd derivative
-a=0;
-b=10;
+a=-5;
+b=5;
 pts = a:((b-a)/100):b;
 hold on
 axis equal
-ys = arrayfun(@(x) f(x), pts);
+ys = arrayfun(@(x) f(x), pts); % function
 plot(pts, ys);
-ys = arrayfun(@(x) forwdiff1(n, h, x), pts);
+ys = arrayfun(@(x) forwdiff1(n, h, x), pts); % 1st der
 plot(pts, ys);
-ys = arrayfun(@(x) forwdiff2(n, h, x), pts);
+ys = arrayfun(@(x) forwdiff2(n, h, x), pts); % 2nd der
 plot(pts, ys);
 legend("f(x)","f'(x)", "f""(x)")
 hold off
@@ -28,25 +28,25 @@ end
 function [dydx, n] = variateN(n, h, z, acc)
     while true
         mtrx = zeros(n+2, n+2);
-        for i = 0:(n+1)
+        for i = 0:(n+1) % fill 1st column with values of function
             mtrx(1+i, 1) = f(z+i*h);
         end
-        for x = 1:(n+1)
+        for x = 1:(n+1) % create next column iteratively from previous column
             for i = 0:(n+1-x)
                 mtrx(i+1, x+1) = (mtrx(i+2, x)-mtrx(i+1, x));
             end
         end
-        suma = 0;
+        suma = 0; % sum the coefficients
         for i = 2:(n+1)
             suma = suma + 1/(i-1)*mtrx(1,i)*(-1)^i;
         end
         dydx = 1/h*suma;
         
-        err = mtrx(1, n+2) / h / factorial(n);
+        err = mtrx(1, n+2) / h / factorial(n); % calculate and check error
         if abs(err) < acc
             break;
         end
-        n = n+1;
+        n = n+1; % increase order of op
     end
 end
 
@@ -54,41 +54,41 @@ end
 function [dydx, h] = variateH(n, h, z, acc)
     while true
         mtrx = zeros(n+2, n+2);
-        for i = 0:(n+1)
+        for i = 0:(n+1) % fill 1st column with values of function
             mtrx(1+i, 1) = f(z+i*h);
         end
-        for x = 1:(n+1)
+        for x = 1:(n+1) % create next column iteratively from previous column
             for i = 0:(n+1-x)
                 mtrx(i+1, x+1) = (mtrx(i+2, x)-mtrx(i+1, x));
             end
         end
-        suma = 0;
+        suma = 0; % sum the coefficients
         for i = 2:(n+1)
             suma = suma + 1/(i-1)*mtrx(1,i)*(-1)^i;
         end
         dydx = 1/h*suma;
         
-        err = mtrx(1, n+2) / h / factorial(n);
+        err = mtrx(1, n+2) / h / factorial(n); % calculate and check error
         if abs(err) < acc
             break;
         end
-        h = h/10;
+        h = h/10; % decrease step
     end
 end
 
 % calculate 1st derivative of f(x) at z
 function dydx = forwdiff1(n, h, z)
     mtrx = zeros(n+1, n+1);
-    for i = 0:n
+    for i = 0:n % fill 1st column with values of function
         mtrx(1+i, 1) = f(z+i*h);
     end
-    for x = 1:n
+    for x = 1:n % create next column iteratively from previous column
         for i = 0:(n-x)
             mtrx(i+1, x+1) = (mtrx(i+2, x)-mtrx(i+1, x));
         end
     end
     
-    suma = 0;
+    suma = 0; % sum the coefficients
     for i = 2:(n+1)
         suma = suma + 1/(i-1)*mtrx(1,i)*(-1)^i;
     end
@@ -99,16 +99,16 @@ end
 % calculate 2nd derivative of f(x) at z
 function dydx = forwdiff2(n, h, z)
     mtrx = zeros(n+1, n+1);
-    for i = 0:n
+    for i = 0:n % fill 1st column with values of function
         mtrx(1+i, 1) = f(z+i*h);
     end
-    for x = 1:n
+    for x = 1:n % create next column iteratively from previous column
         for i = 0:(n-x)
             mtrx(i+1, x+1) = (mtrx(i+2, x)-mtrx(i+1, x));
         end
     end
     
-    suma = 0;
+    suma = 0; % sum the coefficients
     for i = 3:(n+1)
         suma = suma + coefficients(i)*(-1)^(i)*mtrx(1,i);
     end
