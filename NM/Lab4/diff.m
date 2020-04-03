@@ -28,7 +28,7 @@ d = forwdiff1(n, h, x)
 [d, h] = variateH(n, h, x, 0.00000001)
 
 
-function y = f(x)
+function y = f(x) 
     y = sin(x);
 end
 
