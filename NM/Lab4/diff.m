@@ -1,10 +1,11 @@
 clear all
 clc
+
 n = 2
-x = 0
-h = 0.01
+h = 1
+%x = 0
 
-
+% plot the function, 1st and 2nd derivative
 a=0;
 b=10;
 pts = a:((b-a)/100):b;
@@ -16,31 +17,14 @@ ys = arrayfun(@(x) forwdiff1(n, h, x), pts);
 plot(pts, ys);
 ys = arrayfun(@(x) forwdiff2(n, h, x), pts);
 plot(pts, ys);
+legend("f(x)","f'(x)", "f""(x)")
 hold off
 
-
-d = forwdiff2(n, h, x)
-
-
-
 function y = f(x) 
-    y = sin(x);
+    y = x^4;
 end
 
-function ypr = df(n, x)
-    n = mod(n, 4);
-    switch n
-        case 0
-            ypr = sin(x);
-        case 1
-            ypr = cos(x);
-        case 2
-            ypr = -sin(x);
-        case 3
-            ypr = -cos(x);
-    end
-end
-
+% change N so that the error is smaller than accuracy
 function [dydx, n] = variateN(n, h, z, acc)
     while true
         mtrx = zeros(n+2, n+2);
@@ -58,7 +42,7 @@ function [dydx, n] = variateN(n, h, z, acc)
         end
         dydx = 1/h*suma;
         
-        err = mtrx(1, n+2) / h / factorial(n)
+        err = mtrx(1, n+2) / h / factorial(n);
         if abs(err) < acc
             break;
         end
@@ -66,6 +50,7 @@ function [dydx, n] = variateN(n, h, z, acc)
     end
 end
 
+% change H so that the error is smaller than accuracy
 function [dydx, h] = variateH(n, h, z, acc)
     while true
         mtrx = zeros(n+2, n+2);
@@ -83,14 +68,15 @@ function [dydx, h] = variateH(n, h, z, acc)
         end
         dydx = 1/h*suma;
         
-        err = mtrx(1, n+2) / h / factorial(n)
+        err = mtrx(1, n+2) / h / factorial(n);
         if abs(err) < acc
             break;
         end
-        h = h/10
+        h = h/10;
     end
 end
 
+% calculate 1st derivative of f(x) at z
 function dydx = forwdiff1(n, h, z)
     mtrx = zeros(n+1, n+1);
     for i = 0:n
@@ -110,6 +96,7 @@ function dydx = forwdiff1(n, h, z)
     
 end
 
+% calculate 2nd derivative of f(x) at z
 function dydx = forwdiff2(n, h, z)
     mtrx = zeros(n+1, n+1);
     for i = 0:n
@@ -128,6 +115,7 @@ function dydx = forwdiff2(n, h, z)
     dydx=1/h^2*suma;
 end
 
+% calculate coefficients for 2nd derivative
 function coeffs = coefficients(n)
     mtrx = zeros(2*(n-1), 2);
     mtrx(1,1) = 1;
