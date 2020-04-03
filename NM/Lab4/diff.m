@@ -1,8 +1,32 @@
+clear all
+clc
+n = 5
+x = 1
+h = 0.01
 
-n = 3
-x = 2
-[dydx1, dydx2] = diff(n, 1e-6, x) % 0 = f, 1 = f', 2 = f" etc
-der = df(n, x)
+%{
+a=0;
+b=10;
+pts = a:((b-a)/100):b;
+hold on
+axis equal
+ys = arrayfun(@(x) f(x), pts);
+plot(pts, ys);
+ys = arrayfun(@(x) forwdiff1(n, h, x), pts);
+plot(pts, ys);
+%ys = arrayfun(@(x) Reversediff1(n, h, x), pts);
+%plot(pts, ys);
+ys = arrayfun(@(x) forwdiff2(n, h, x), pts);
+plot(pts, ys);
+%ys = arrayfun(@(x) Reversediff2(n, h, x), pts);
+%plot(pts, ys);
+hold off
+%}
+
+d = forwdiff1(n, h, x)
+
+[d, h] = variateH(n, h, x, 0.001)
+
 
 function y = f(x)
     y = sin(x);
@@ -22,23 +46,132 @@ function ypr = df(n, x)
     end
 end
 
-function [dydx1, dydx2] = diff(n, h, z)
+function [dydx, n] = variateN(n, h, z, acc)
+    while true
+        mtrx = zeros(n+2, n+2);
+        for i = 0:(n+1)
+            mtrx(1+i, 1) = f(z+i*h);
+        end
+        for x = 1:(n+1)
+            for i = 0:(n+1-x)
+                mtrx(i+1, x+1) = (mtrx(i+2, x)-mtrx(i+1, x));
+            end
+        end
+        suma = 0;
+        for i = 2:(n+1)
+            suma = suma + 1/(i-1)*mtrx(1,i)*(-1)^i;
+        end
+        dydx = 1/h*suma;
+        
+        sumerr = 0;
+        for i = 2:(n+2)
+            sumerr = sumerr + 1/(i-1)*mtrx(1,i)*(-1)^i;
+        end
+        err = sumerr / h / factorial(n);
+        if err < acc
+            break;
+        end
+        n = n+1;
+    end
+end
+
+function [dydx, h] = variateH(n, h, z, acc)
+    while true
+        mtrx = zeros(n+2, n+2);
+        for i = 0:(n+1)
+            mtrx(1+i, 1) = f(z+i*h);
+        end
+        for x = 1:(n+1)
+            for i = 0:(n+1-x)
+                mtrx(i+1, x+1) = (mtrx(i+2, x)-mtrx(i+1, x));
+            end
+        end
+        suma = 0;
+        for i = 2:(n+1)
+            suma = suma + 1/(i-1)*mtrx(1,i)*(-1)^i;
+        end
+        dydx = 1/h*suma;
+        
+        sumerr = 0;
+        for i = 2:(n+2)
+            sumerr = sumerr + 1/(i-1)*mtrx(1,i)*(-1)^i;
+        end
+        err = sumerr / h / factorial(n);
+        if err < acc
+            break;
+        end
+        h = h/10
+    end
+end
+
+function dydx = forwdiff1(n, h, z)
     mtrx = zeros(n+1, n+1);
-    for y = 0:n
-        mtrx(y+1, 1) = f(z+y*h)
+    for i = 0:n
+        mtrx(1+i, 1) = f(z+i*h);
     end
     for x = 1:n
-        for y = 0:(n-x)
-            mtrx(y+1, x+1) = (mtrx(y+2, x)-mtrx(y+1, x))/(x*h);
+        for i = 0:(n-x)
+            mtrx(i+1, x+1) = (mtrx(i+2, x)-mtrx(i+1, x));
         end
     end
-    mtrx
-    dydx1 = mtrx(1, n+1)*factorial(n)*power(h, n);
     
-    dydx2 = 0;
-    for i = n:-1:0
-        fprintf("dydx = %f\n(-1)^(n-i) = %i\nnchoosek(n, i) = %i\nf(z+i*x) = %f", dydx2, (-1)^(n-i), nchoosek(n, i), f(z+i*x));
-        dydx2 = dydx2 + (-1)^(n-i) * nchoosek(n, i) * f(z+i*h)% / power(h, n)
+    suma = 0;
+    for i = 2:(n+1)
+        suma = suma + 1/(i-1)*mtrx(1,i)*(-1)^i;
+    end
+    dydx = 1/h*suma;
+    
+end
+function dydx =  revdiff1(n, h, z)
+    mtrx = zeros(n+1, n+1);
+    for i = 0:n
+        mtrx(i+1, 1) = f(z-i*h);
+    end
+    for x = 1:n
+        for i = 0:(n-x)
+            mtrx(i+1, x+1) = (mtrx(i+1, x)-mtrx(i+2, x));
+        end
     end
     
+    suma = 0;
+    for i = 2:(n+1)
+        suma = suma + 1/(i-1)*mtrx(1,i);
+    end
+    dydx = 1/h*suma;
+    
+end
+
+function dydx = forwdiff2(n, h, z)
+    mtrx = zeros(n+1, n+1);
+    for i = 0:n
+        mtrx(1+i, 1) = f(z+i*h);
+    end
+    for x = 1:n
+        for i = 0:(n-x)
+            mtrx(i+1, x+1) = (mtrx(i+2, x)-mtrx(i+1, x));
+        end
+    end
+    
+    suma = 0;
+    for i = 3:(n+1)
+        suma = suma + (12-i+3)/12*(-1)^(i-1)*mtrx(1,i);
+    end
+    dydx=1/h^2*suma;
+end
+function dydx =  revdiff2(n, h, z)
+    mtrx = zeros(n+1, n+1);
+    for i = 0:n
+        mtrx(i+1, 1) = f(z-i*h);
+    end
+    for x = 1:n
+        for i = 0:(n-x)
+            mtrx(i+1, x+1) = (mtrx(i+1, x)-mtrx(i+2, x));
+        end
+    end
+    
+    suma = 0;
+    for i = 3:(n+1)
+        suma = suma + (12-i+3)/12*mtrx(1,i);
+    end
+    dydx =1/h^2*suma;
 end
