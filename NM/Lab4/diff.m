@@ -1,7 +1,7 @@
 clear all
 clc
-n = 5
-x = 1
+n = 1
+x = 0
 h = 0.01
 
 %{
@@ -25,7 +25,7 @@ hold off
 
 d = forwdiff1(n, h, x)
 
-[d, h] = variateH(n, h, x, 0.001)
+[d, h] = variateH(n, h, x, 0.00000001)
 
 
 function y = f(x)
@@ -63,12 +63,8 @@ function [dydx, n] = variateN(n, h, z, acc)
         end
         dydx = 1/h*suma;
         
-        sumerr = 0;
-        for i = 2:(n+2)
-            sumerr = sumerr + 1/(i-1)*mtrx(1,i)*(-1)^i;
-        end
-        err = sumerr / h / factorial(n);
-        if err < acc
+        err = mtrx(1, n+2) / h / factorial(n)
+        if abs(err) < acc
             break;
         end
         n = n+1;
@@ -92,12 +88,8 @@ function [dydx, h] = variateH(n, h, z, acc)
         end
         dydx = 1/h*suma;
         
-        sumerr = 0;
-        for i = 2:(n+2)
-            sumerr = sumerr + 1/(i-1)*mtrx(1,i)*(-1)^i;
-        end
-        err = sumerr / h / factorial(n);
-        if err < acc
+        err = mtrx(1, n+2) / h / factorial(n)
+        if abs(err) < acc
             break;
         end
         h = h/10
