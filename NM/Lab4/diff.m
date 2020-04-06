@@ -1,27 +1,50 @@
 clear all
 clc
 
-n = 3
-h = 0.01
+n = 2
+h = 1e-10
 %x = 0
 
 % plot the function, 1st and 2nd derivative
 a=-5;
 b=5;
 pts = a:((b-a)/100):b;
+
+figure
+subplot(1,3,1)
 hold on
-axis equal
-ys = arrayfun(@(x) f(x), pts); % function
-plot(pts, ys);
-ys = arrayfun(@(x) forwdiff1(n, h, x), pts); % 1st der
-plot(pts, ys);
-ys = arrayfun(@(x) forwdiff2(n, h, x), pts); % 2nd der
-plot(pts, ys);
-legend("f(x)","f'(x)", "f""(x)")
+%axis equal
+dys = arrayfun(@(x) df(x), pts); % function
+plot(pts, dys);
+eys = arrayfun(@(x) forwdiff1(n, h, x), pts); % 1st der
+plot(pts, eys);
+legend("analyt. f'(x)","approx. f'(x)")
+hold off
+subplot(1,3,2)
+hold on
+rys = abs(eys-dys);
+plot(pts, rys);
+legend("abs error")
+[v, x] = max(rys);
+fprintf("Max error: %f, at x=%f\n", v, pts(x))
+hold off
+subplot(1,3,3)
+hold on
+rys = rys./abs(dys);
+plot(pts, rys);
+legend("rel error")
+[v, x] = max(rys);
+fprintf("Max rel error: %f, at x=%f\n", v, pts(x))
 hold off
 
+
+
+function dydx = df(x)
+    dydx = cos(x);
+end
+
 function y = f(x) 
-    y = x^4;
+    y = sin(x);
 end
 
 % change N so that the error is smaller than accuracy
