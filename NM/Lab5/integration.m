@@ -31,8 +31,9 @@ for i = 1:length(pts)
 end
 plot(pts, fs)
 plot(pts, is)
-hold off
 legend('Sf(x)', 'Num int')
+fprintf("Area = %f\n", is(length(pts)))
+hold off
 subplot(2, 6, 7)
 for i = 1:length(pts)
     is(i) = abs(Sf(pts(i)) - Sf(pts(1)) - is(i));
@@ -51,8 +52,9 @@ for i = 1:length(pts)
 end
 plot(pts, fs)
 plot(pts, is)
-hold off
 legend('Sf(x)', 'Num int')
+fprintf("Area = %f\n", is(length(pts)))
+hold off
 subplot(2, 6, 8)
 for i = 1:length(pts)
     is(i) = abs(Sf(pts(i)) - Sf(pts(1)) - is(i));
@@ -71,8 +73,9 @@ for i = 1:length(pts)
 end
 plot(pts, fs)
 plot(pts, is)
-hold off
 legend('Sf(x)', 'Num int')
+fprintf("Area = %f\n", is(length(pts)))
+hold off
 subplot(2, 6, 9)
 for i = 1:length(pts)
     is(i) = abs(Sf(pts(i)) - Sf(pts(1)) - is(i));
@@ -92,8 +95,9 @@ for i = 1:length(pts)
 end
 plot(pts, fs)
 plot(pts, is)
-hold off
 legend('Sf(x)', 'Num int')
+fprintf("Area = %f\n", is(length(pts)))
+hold off
 subplot(2, 6, 10)
 for i = 1:length(pts)
     is(i) = abs(Sf(pts(i)) - Sf(pts(1)) - is(i));
@@ -112,8 +116,9 @@ for i = 1:length(pts)
 end
 plot(pts, fs)
 plot(pts, is)
-hold off
 legend('Sf(x)', 'Num int')
+fprintf("Area = %f\n", is(length(pts)))
+hold off
 subplot(2, 6, 11)
 for i = 1:length(pts)
     is(i) = abs(Sf(pts(i)) - Sf(pts(1)) - is(i));
@@ -132,8 +137,9 @@ for i = 1:length(pts)
 end
 plot(pts, fs)
 plot(pts, is)
-hold off
 legend('Sf(x)', 'Num int')
+fprintf("Area = %f\n", is(length(pts)))
+hold off
 subplot(2, 6, 12)
 for i = 1:length(pts)
     is(i) = abs(Sf(pts(i)) - Sf(pts(1)) - is(i));
