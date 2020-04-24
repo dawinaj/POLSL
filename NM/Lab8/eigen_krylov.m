@@ -30,7 +30,7 @@ vects = normalize(vects)
 
 function [p, Y] = pcoeffs(A, Y)
     n = size(Y, 1);
-    for i=2:n
+    for i = 2:n
         Y(:, n+1-i) = A*Y(:, n+2-i);
     end
     Y(:, n+1) = -A*Y(:, 1);
@@ -44,12 +44,12 @@ function [x, eval] = eigenvectors(Y, p)
     vec = ones(1, size(Y, 2));
     vec(1, 2:(n+1)) = p;
     eval = flip(roots(vec));
-    for j=1:n
+    for j = 1:n
         g = ones(1, n);
-        for i=1:(n-1)
+        for i = 1:(n-1)
             g(1, n-i) = eval(j)*g(1, n-i+1) + p(i)*g(1, n);
         end
-        for i=1:n
+        for i = 1:n
         x(:, j) = x(:, j) + Y(:, n+1-i)*g(1, i);
         end
     end
