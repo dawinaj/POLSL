@@ -61,14 +61,23 @@ reg CI;
 wire [3:0] Y;
 wire CO;
 
+time tp_start = 0, tp_max = 0, tp_now = 0;
+
 ADD_4 A4_1(CO, Y, A, B, CI);
 
 initial begin
     #100;
-    CI = 1'b1;
-    A = 4'b0111;
-    B = 4'b0101;
-    #100;
+    CI = 1'b0;
+    A = 4'b0000;
+    B = 4'b0000;
+    repeat (2) begin
+        repeat(16) begin
+            repeat(16) #100 B = B + 1;
+        #100 A = A + 1;
+        end
+        #100 CI = ~CI;
+    end
+    $display("tp_max = %t", tp_max);
     $finish;
 end
 
@@ -77,6 +86,13 @@ initial begin
     $dumpfile("add_4_test.vcd");
     $dumpvars(0, ADD_4_TEST);
     $dumpon();
+end
+
+always @(A or B or CI) tp_start = $time;
+always @(Y) begin
+    tp_now = $time;
+    if((tp_now - tp_start) > tp_max)
+        tp_max = tp_now - tp_start;
 end
 
 endmodule
