@@ -56,7 +56,7 @@ output CO;
 output [3:0] S; 
 input [3:0] A, B;
 input CI;
-wire [3:0] Abis, Bbis = 4'b0000;
+wire [3:0] Abis, Bbis;
 wire C4, s3s2, s3s1;
 wire GND = 0;
 
@@ -80,22 +80,29 @@ reg CI;
 wire [3:0] Y;
 wire CO;
 
-ADD_BCD AD_1(.CO(), .S(), .A(), .B(), .CI());
-//...
+ADD_BCD AD_1(CO, Y, A, B, CI);
 
-//Write stimulus and observer - log results to waveform and console
-//Prove correctnes of the design
-//Determine maximal propagation time of designed adder
 initial begin
-    //...
-    #10;
-    $finish;    
+    #100;
+    CI = 1'b0;
+    repeat (2) begin
+        A = 4'b0000;
+        repeat(10) begin
+            B = 4'b0000;
+            repeat(9) #100 B = B + 1;
+        #100 A = A + 1;
+        end
+        #100 CI = ~CI;
+    end
+    $finish;
 end
 
 initial begin
+    $monitor("%t: %b + %b = %b, C:%b", $time, A, B, Y, CO);
     $dumpfile("add_bcd.vcd");
     $dumpvars(0, ADD_BCD_TEST);
     $dumpon();
 end
+
 
 endmodule
