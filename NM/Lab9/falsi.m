@@ -1,33 +1,28 @@
 clear all
 clc
 
-regulafalsi(1, 5, 0.000001)
+regulafalsi(-10, 1, 0.01)
 
 function y = f(x) 
-    y = -9/x+5;
+    y = x^4 - 625;
 end
 
 function x = regulafalsi(a, b, acc)
-    if sign(f(a)) == 0
-        x = a;
-    elseif sign(f(b)) == 0
-        x = b;
-    elseif sign(f(a)) ~= sign(f(b))
+    if sign(f(a)) ~= sign(f(b))
         while 1
-            x = a - f(a)/(f(b)-f(a))*(b-a);
+            x = a - f(a)/(f(b)-f(a))*(b-a)
             if sign(f(x)) == sign(f(a))
-                a = x;
+                a = x
             elseif sign(f(x)) == sign(f(b))
-                b = x;
-            else
-                a = x;
-                b = x;
+                b = x
+            end
+            if abs(f(x)) < acc
+                break;
             end
             if abs(b-a) < acc
-               break; 
+                break;
             end
         end
-        x = (a+b)/2;
 	else
         error("The same signs!");
     end
