@@ -25,7 +25,7 @@ function [x, n] = regulafalsi(a, b, acc)
                 break;
             end
         end
-	else
+    else
         error("The same signs!");
     end
 end
