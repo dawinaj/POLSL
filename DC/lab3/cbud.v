@@ -12,14 +12,14 @@
 //CBUD - Counter Binary Up Down
 module CBUD(CLK, CLR, DIR, Q);
     //Symbolic states declaration - Encoding
-    parameter S0 = 4'b0000;
-    parameter S1 = 4'b0001;
-    parameter S2 = 4'b0010;
-    parameter S3 = 4'b0011;
-    parameter S4 = 4'b0100;
-    parameter S5 = 4'b0101;
-    parameter S6 = 4'b0110;
-    parameter S7 = 4'b0111;
+    parameter S0 = 3'b000;
+    parameter S1 = 3'b001;
+    parameter S2 = 3'b010;
+    parameter S3 = 3'b011;
+    parameter S4 = 3'b100;
+    parameter S5 = 3'b101;
+    parameter S6 = 3'b110;
+    parameter S7 = 3'b111;
     input CLK; //Clock input
     input CLR; //Clear input - when asserted place counter in state 3'b000
     input DIR; //Counting direction input 
@@ -67,12 +67,16 @@ CBUD UUT(.CLK(CLK), .CLR(CLR), .DIR(DIR), .Q(Q));
 //Main test vector generator
 initial begin
     DIR = 1'b0;
+    // clear everything
     CLR = 1'b1;
     repeat(3) @(negedge CLK);
     CLR = 1'b0;
     
+    // go forward for 10 cycles to test the wrapping
     repeat(10) @(negedge CLK);
     
+    // go go backward for 10 cycles
+    $display("Rewind time");
     DIR = 1'b1;
     repeat(10) @(negedge CLK);
     $finish;
