@@ -39,9 +39,11 @@ module MIXER_CTRL(CLK, CLR, L1, L2, TEMP, V1, V2, H, S);
     input L1, L2, TEMP;
     output V1, V2, H, S;
     wire [2:0] Q, nextQ;
-    wire W;
-    wire T_EN;
-    wire Cntr; //Counter has finished counting
+    wire W, Cntr;
+    wire T_EN = 1'b0;
+    
+    //Timer instance
+    TIMER T1(.CLK(CLK), .EN(T_EN), .T(8'd15), .TMO(Cntr));
     
     // Parameterized register
     REG #(.W(3)) R1(CLK, CLR, nextQ, Q);
@@ -52,30 +54,27 @@ module MIXER_CTRL(CLK, CLR, L1, L2, TEMP, V1, V2, H, S);
     // Parameterized memory
     ROM #(.D_W(8), .A_W(4)) M1({Q, W}, {nextQ, T_EN, V1, V2, H, S});
     
-    //Timer instance
-    TIMER T1(.CLK(CLK), .EN(T_EN), .T(8'd15), .TMO(Cntr));
     
-initial begin
-    //Initialize ROM memory using SET task
-    M1.SET({S0,  1'b0}, {S0,  S0o});
-    M1.SET({S0,  1'b1}, {S1T, S0o});
-    
-    M1.SET({S1T, 1'b0}, {S1C, S1o});
-    M1.SET({S1T, 1'b1}, {S2T, S1o});
-    
-    M1.SET({S1C, 1'b0}, {S1T, S1o});
-    M1.SET({S1C, 1'b1}, {S3,  S1o});
-    
-    M1.SET({S2T, 1'b0}, {S2C, S2o});
-    M1.SET({S2T, 1'b1}, {S1T, S2o});
-    
-    M1.SET({S2C, 1'b0}, {S2T, S2o});
-    M1.SET({S2C, 1'b1}, {S3,  S2o});
-    
-    M1.SET({S3,  1'b0}, {S0,  S3o});
-    M1.SET({S3,  1'b1}, {S3,  S3o});
-end
-
+    initial begin
+        //Initialize ROM memory using SET task
+        M1.SET({S0,  1'b0}, {S0,  S0o});
+        M1.SET({S0,  1'b1}, {S1T, S0o});
+        
+        M1.SET({S1T, 1'b0}, {S1C, S1o});
+        M1.SET({S1T, 1'b1}, {S2T, S1o});
+        
+        M1.SET({S1C, 1'b0}, {S1T, S1o});
+        M1.SET({S1C, 1'b1}, {S3,  S1o});
+        
+        M1.SET({S2T, 1'b0}, {S2C, S2o});
+        M1.SET({S2T, 1'b1}, {S1T, S2o});
+        
+        M1.SET({S2C, 1'b0}, {S2T, S2o});
+        M1.SET({S2C, 1'b1}, {S3,  S2o});
+        
+        M1.SET({S3,  1'b0}, {S0,  S3o});
+        M1.SET({S3,  1'b1}, {S3,  S3o});
+    end
 endmodule
 
 module MIXER_TEST;
@@ -106,7 +105,7 @@ integer TMR;
 //Main test vector generator
 initial begin
     CLR = 1'b1;
-    repeat(2) @(negedge CLK);
+    repeat(3) @(negedge CLK);
     CLR = 1'b0;
     
     repeat(1000) @(negedge CLK);
