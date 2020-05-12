@@ -33,9 +33,9 @@ module UPROG_A(CLK, CLR, A, B, X, Y);
     ROM #(.D_W(4), .A_W(4)) M1({Q, A, B}, {nextQ, X, Y});
     
     initial begin
-        M1.SET({S1, 1'b0, 1'b0}, {S1, S1o});
+        M1.SET({S1, 1'b0, 1'b0}, {S2, S1o});
         M1.SET({S1, 1'b0, 1'b1}, {S3, S1o});
-        M1.SET({S1, 1'b1, 1'b0}, {S1, S1o});
+        M1.SET({S1, 1'b1, 1'b0}, {S2, S1o});
         M1.SET({S1, 1'b1, 1'b1}, {S3, S1o});
         
         M1.SET({S2, 1'b0, 1'b0}, {S4, S2o});
@@ -64,22 +64,34 @@ UPROG_A UUT(.CLK(CLK), .CLR(CLR), .A(A), .B(B), .X(X), .Y(Y));
 
 //Main test vector generator
 initial begin
+    A = 1'b0;
+    B = 1'b0;
     CLR = 1'b1;
-    repeat(3) @(negedge CLK);
+    repeat(2) @(negedge CLK);
     CLR = 1'b0;
-
-    A = 1'b0;
-    B = 1'b0;
     repeat(4) @(negedge CLK);
+    
     A = 1'b0;
     B = 1'b1;
+    CLR = 1'b1;
+    repeat(2) @(negedge CLK);
+    CLR = 1'b0;
     repeat(4) @(negedge CLK);
+    
     A = 1'b1;
     B = 1'b0;
+    CLR = 1'b1;
+    repeat(2) @(negedge CLK);
+    CLR = 1'b0;
     repeat(4) @(negedge CLK);
+    
     A = 1'b1;
     B = 1'b1;
+    CLR = 1'b1;
+    repeat(2) @(negedge CLK);
+    CLR = 1'b0;
     repeat(4) @(negedge CLK);
+    
     $finish;
 end
 
