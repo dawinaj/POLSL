@@ -29,36 +29,51 @@ module MIXER_CTRL(CLK, CLR, L1, L2, TEMP, V1, V2, H, S);
     parameter S2C = 3'b100;
     parameter S3  = 3'b101;
     
-    parameter S0o = 4'b1000;
-    parameter S1o = 4'b0011;
-    parameter S2o = 4'b0001;
-    parameter S3o = 4'b0101;
+    parameter S0o = 5'b01000;
+    parameter S1o = 5'b10011;
+    parameter S2o = 5'b10001;
+    parameter S3o = 5'b00101;
     
     //Interface
     input CLK, CLR;
     input L1, L2, TEMP;
     output V1, V2, H, S;
-    wire [3:0] Q, nextQ;
+    wire [2:0] Q, nextQ;
     wire W;
-    wire T_EN; //Enable timer signal
-    wire Cntr; //Time has elapsed since triggering
+    wire T_EN;
+    wire Cntr; //Counter has finished counting
     
     // Parameterized register
-    REG #(.W(2)) R1(CLK, CLR, nextQ, Q);
+    REG #(.W(3)) R1(CLK, CLR, nextQ, Q);
     
     // Input mux
-    MUX4 INM(W, Q, {T1, T2, T1, T2});
+    MUX8 INM(W, Q, {2'b0, L1, Cntr, TEMP, Cntr, TEMP, L2});
     
     // Parameterized memory
-    ROM #(.D_W(4), .A_W(3)) M1({Q, W}, {nextQ, F2, F1});
+    ROM #(.D_W(8), .A_W(4)) M1({Q, W}, {nextQ, T_EN, V1, V2, H, S});
     
     //Timer instance
-    TIMER T1(.CLK(CLK), .EN(T_EN), .T(8'd204), .TMO(Cntr));
+    TIMER T1(.CLK(CLK), .EN(T_EN), .T(8'd15), .TMO(Cntr));
     
 initial begin
     //Initialize ROM memory using SET task
-    //M1.SET(, );
-
+    M1.SET({S0,  1'b0}, {S0,  S0o});
+    M1.SET({S0,  1'b1}, {S1T, S0o});
+    
+    M1.SET({S1T, 1'b0}, {S1C, S1o});
+    M1.SET({S1T, 1'b1}, {S2T, S1o});
+    
+    M1.SET({S1C, 1'b0}, {S1T, S1o});
+    M1.SET({S1C, 1'b1}, {S3,  S1o});
+    
+    M1.SET({S2T, 1'b0}, {S2C, S2o});
+    M1.SET({S2T, 1'b1}, {S1T, S2o});
+    
+    M1.SET({S2C, 1'b0}, {S2T, S2o});
+    M1.SET({S2C, 1'b1}, {S3,  S2o});
+    
+    M1.SET({S3,  1'b0}, {S0,  S3o});
+    M1.SET({S3,  1'b1}, {S3,  S3o});
 end
 
 endmodule
@@ -90,9 +105,12 @@ integer TMR;
 
 //Main test vector generator
 initial begin
-    //Initialize your controler here...    ->CLR
-    //Wait for at least two cycles - you can modify this
-    repeat(900) @(negedge CLK);
+    CLR = 1'b1;
+    repeat(2) @(negedge CLK);
+    CLR = 1'b0;
+    
+    repeat(1000) @(negedge CLK);
+
     $display("Simulation finish...");
     $finish;
 
@@ -133,7 +151,7 @@ always @(negedge CLK) begin
         if(L2 === 1'b1) begin
             if(T < T_MIN)
                 $display("Process Error: Mixture is not heated enough before placing in the mold.");
-            if(S !== 1'b1 )
+            if(S !== 1'b1)
                 $display("Process Error: Mixture is not mixed.");
             if(TM < TM_MIN)
                 $display("Process Error: Mixture preparation time to short.");
