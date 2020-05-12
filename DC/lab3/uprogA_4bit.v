@@ -20,7 +20,7 @@ module UPROG_A(CLK, CLR, A, B, X, Y);
     parameter S1o = 2'b01;
     parameter S2o = 2'b11;
     parameter S3o = 2'b00;
-    parameter S4o = 2'b11;
+    parameter S4o = 2'b10;
     input CLK, CLR;
     input A, B;
     output X, Y;
@@ -56,57 +56,62 @@ module UPROG_A(CLK, CLR, A, B, X, Y);
 endmodule
 
 module UPROG_A_TEST;
-reg CLK, CLR, A, B;
-wire X, Y;
+    reg CLK, CLR, A, B;
+    wire X, Y;
 
-//Unit Under Test
-UPROG_A UUT(.CLK(CLK), .CLR(CLR), .A(A), .B(B), .X(X), .Y(Y));
+    //Unit Under Test
+    UPROG_A UUT(.CLK(CLK), .CLR(CLR), .A(A), .B(B), .X(X), .Y(Y));
 
-//Main test vector generator
-initial begin
-    A = 1'b0;
-    B = 1'b0;
-    CLR = 1'b1;
-    repeat(2) @(negedge CLK);
-    CLR = 1'b0;
-    repeat(4) @(negedge CLK);
+    //Main test vector generator
+    initial begin
+        A = 1'b0;
+        B = 1'b0;
+        CLR = 1'b1;
+        repeat(2) @(negedge CLK);
+        CLR = 1'b0;
+        repeat(4) @(negedge CLK);
+        
+        A = 1'b0;
+        B = 1'b1;
+        CLR = 1'b1;
+        repeat(2) @(negedge CLK);
+        CLR = 1'b0;
+        repeat(4) @(negedge CLK);
+        
+        A = 1'b1;
+        B = 1'b0;
+        CLR = 1'b1;
+        repeat(2) @(negedge CLK);
+        CLR = 1'b0;
+        repeat(4) @(negedge CLK);
+        
+        A = 1'b1;
+        B = 1'b1;
+        CLR = 1'b1;
+        repeat(2) @(negedge CLK);
+        CLR = 1'b0;
+        repeat(4) @(negedge CLK);
+        
+        $finish;
+    end
     
-    A = 1'b0;
-    B = 1'b1;
-    CLR = 1'b1;
-    repeat(2) @(negedge CLK);
-    CLR = 1'b0;
-    repeat(4) @(negedge CLK);
+    // Clock generator
+    initial begin
+        CLK = 1'b0;
+        forever #50 CLK = ~CLK;
+    end
     
-    A = 1'b1;
-    B = 1'b0;
-    CLR = 1'b1;
-    repeat(2) @(negedge CLK);
-    CLR = 1'b0;
-    repeat(4) @(negedge CLK);
+    initial begin
+        $dumpfile("uprog_a.vcd");
+        $dumpvars;
+        $dumpon;
+        $monitor("AB=%b%b, xy=%b%b", A, B, X, Y);
+    end
     
-    A = 1'b1;
-    B = 1'b1;
-    CLR = 1'b1;
-    repeat(2) @(negedge CLK);
-    CLR = 1'b0;
-    repeat(4) @(negedge CLK);
-    
-    $finish;
-end
-
-// Clock generator
-initial begin
-    CLK = 1'b0;
-    forever #50 CLK = ~CLK;
-end
-
-initial begin
-    $dumpfile("uprog_a.vcd");
-    $dumpvars;
-    $dumpon;    
-end
-
-//State change reporter ...
-
+    //State change reporter ...
+    reg [1:0] last_Q;
+    always @(UUT.Q) begin
+        $display("State change: %d -> %d", last_Q, UUT.Q);
+        last_Q = UUT.Q;
+    end
 endmodule
