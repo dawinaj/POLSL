@@ -1,8 +1,8 @@
 clear all
 clc
 
-a = 0;
-b = 20;
+a = -7;
+b = 13;
 
 pts = a:((b-a)/100):b;
 [cs, sigma] = approximate(a, b, 20)
@@ -12,8 +12,9 @@ plot(pts, approximator(pts, cs, a, b))
 hold off
 
 function y = f(x)
-	d = 20;
+	d = 5;
     y = sqrt(2/d) * sin(4*pi*x/d);
+%    y = 5*abs(x-d/2);
 end
 
 function [c, sigma] = approximate(a, b, n)
