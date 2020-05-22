@@ -1,11 +1,15 @@
 clear all
 clc
 
-e = 1;
-h = 0.1;
-d = 1;
+e = 9;
+h = 0.001;
+d = 1.9;
 
 [Xs, Ys, Fxys, Dys] = diffeq(0, e, d, h)
+
+hold on
+plot(Xs, Ys)
+hold off
 
 
 function fxy = f(x, y)
