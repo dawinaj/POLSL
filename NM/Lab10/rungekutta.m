@@ -25,10 +25,10 @@ end
 
 function [Xs, Ys, K, Dys] = Runge_Kutta(a, b, y0, h) 
     %Initialisation of values
-    Xs = (a:h:b).';
-    Ys   = zeros(length(Xs), 1);
-    K = zeros(length(Xs), 4);
-    Dys  = zeros(length(Xs), 1);
+    Xs  = (a:h:b).';
+    Ys  = zeros(length(Xs), 1);
+    K   = zeros(length(Xs), 4);
+    Dys = zeros(length(Xs), 1);
     
     Ys(1) = y0;
     K(1) = h* f(Xs(1, 1),     Ys(1));
