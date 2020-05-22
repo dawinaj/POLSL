@@ -31,19 +31,19 @@ function [Xs, Ys, K, Dys] = Runge_Kutta(a, b, y0, h)
     Dys  = zeros(length(Xs), 1);
     
     Ys(1) = y0;
-    K(1) = h*f(Xs(1), Ys(1));
-    K(2) = h*(f(Xs(1)+h/2, Ys(1)+K(1)/2));
-    K(3) = h*(f(Xs(1)+h/2, Ys(1)+K(2)/2)); 
-    K(4) = h*(f(Xs(1)+h, Ys(1)+K(3)));
-    Dys(1) = (K(1)+2*K(2)+2*K(3) + K(4))/6;
+    K(1) = h* f(Xs(1, 1),     Ys(1));
+    K(2) = h*(f(Xs(1, 1)+h/2, Ys(1)+K(1, 1)/2));
+    K(3) = h*(f(Xs(1, 1)+h/2, Ys(1)+K(1, 2)/2)); 
+    K(4) = h*(f(Xs(1, 1)+h,   Ys(1)+K(1, 3)));
+    Dys(1) = (K(1, 1)+2*K(1, 2)+2*K(1, 3) + K(1, 4))/6;
     
-     %Main loop
+    %Main loop
     for j =2: length(Xs)
         Ys(j) = Ys(j-1)+ Dys(j-1);
-        K(1+4*(j-1)) = h*f(Xs(j), Ys(j));
-        K(2+4*(j-1)) = h*(f(Xs(j)+h/2, Ys(j)+K(1+4*(j-1))/2));
-        K(3+4*(j-1)) = h*(f(Xs(j)+h/2, Ys(j)+K(2+4*(j-1))/2)); 
-        K(4+4*(j-1)) = h*(f(Xs(j)+h, Ys(j)+K(3+4*(j-1))));
+        K(j-1, 1) = h*f(Xs(j), Ys(j));
+        K(j-1, 2) = h*(f(Xs(j)+h/2, Ys(j)+K(j-1, 1)/2));
+        K(j-1, 3) = h*(f(Xs(j)+h/2, Ys(j)+K(j-1, 2)/2)); 
+        K(j-1, 4) = h*(f(Xs(j)+h,   Ys(j)+K(j-1, 3)));
         Dys(j) = (K(j-1, 1)+2*K(j-1, 2)+2*K(j-1, 3) + K(j-1, 4))/6;
     end
     
