@@ -1,8 +1,13 @@
 clear all
 clc
 
-a = -7;
-b = 13;
+a = 0;
+b = 1;
+h = 0.1;
+yata = 1;
+
+[Xs, Ys, Fxys, Dys] = diffeq(a, b, h, yata)
+
 
 function fxy = f(x, y)
     fxy = 2 * x * y;
@@ -20,7 +25,7 @@ function [Xs, Ys, Fxys, Dys] = diffeq(a, b, h, yata)
     Dys(1) = h * Fxys(1);
     
     for i = 2:length(Xs)
-        Ys(i)   = Ys(i-1)+Dys(y-1);
+        Ys(i)   = Ys(i-1)+Dys(i-1);
         Fxys(i) = f(Xs(i), Ys(i));
         Dys(i)  = h * Fxys(i);
     end
