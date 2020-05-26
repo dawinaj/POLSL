@@ -2,12 +2,16 @@ clear all
 clc
 
 e = 9;
-h = 0.001;
 d = 1.9;
 
-[Xs, Ys, Fxys, Dys] = diffeq(0, e, d, h)
+
 
 hold on
+[Xs, Ys, Fxys, Dys] = diffeq(0, e, d, 1)
+plot(Xs, Ys)
+[Xs, Ys, Fxys, Dys] = diffeq(0, e, d, .1)
+plot(Xs, Ys)
+[Xs, Ys, Fxys, Dys] = diffeq(0, e, d, .01)
 plot(Xs, Ys)
 hold off
 
