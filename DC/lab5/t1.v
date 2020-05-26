@@ -24,7 +24,7 @@ output nDONE; //Notification about completing measurement process
 wire [3:0] Q_CTRL;
 wire [7:0] nCTRL;
 wire DUMMY_0, DUMMY_1;
-wire GATE_EN; //Gate
+wire GATE_EN, GATE_NEN; //Gate
 wire G_F_IN; //Gated F_IN
 wire CNT_CLR; //Counter clear
 wire LD; //Load latch
@@ -39,11 +39,11 @@ SN7442 CTRL_DEC1(.Y({DUMMY_1, DUMMY_0, nCTRL}), .I({1'b0, Q_CTRL[3:1]}));
 
 //Possibly this help you to generate GATE_EN'
 
-SN7474 CTRL_G_CTRL(.CLK(1'b0), .nS(nCTRL[0]), .nR(nCTRL[5]), .Q(GATE_EN), .nQ());
+SN7474 CTRL_G_CTRL(.CLK(1'b0), .nS(nCTRL[0]), .nR(nCTRL[5] & ~CLR), .Q(GATE_EN), .nQ());
 //Generate LD and CNT_CLR note required signals polarity
-SN7474 CTRL_LD_CTRL(.CLK(CLK), .nS(1'b1), .nR(1'b1), .D(nCTRL[5]), .Q(LD), .nQ());
+not #2 N1 (LD, nCTRL[6]);
 
-assign CNT_CLR = ~nCTRL[7];
+assign CNT_CLR = ~nCTRL[7] | CLR;
 assign nDONE = nCTRL[7]; //End of measurement notification
 
 //Counter
