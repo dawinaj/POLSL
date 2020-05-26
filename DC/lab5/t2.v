@@ -27,7 +27,7 @@ wire [7:0] nCTRL;
 wire DUMMY_0, DUMMY_1;
 wire GATE_EN, GATE_NEN; //Gate
 wire G_F_IN; //Gated F_IN
-wire CNT_CLR; //Counter clear
+wire CNT_CLR, nCNT_CLR; //Counter clear
 wire LD; //Load latch
 wire nCLR, nR, R;
 wire Q_OVF;
@@ -48,13 +48,14 @@ SN7474 CTRL_LD_CTRL(.CLK(CLK), .nS(1'b1), .nR(1'b1), .D(nCTRL[5]), .Q(LD), .nQ()
 
 
 nand #2 (CNT_CLR, nCTRL[7], nCLR);
+not  #2 (nCNT_CLR, CNT_CLR);
 assign #2 nDONE = nCTRL[7]; //End of measurement notification
 
 //Counter
 SN7490 C1(.CLK(G_F_IN),  .R0(CNT_CLR), .R9(1'b0), .Q(QC_U));
 SN7490 C2(.CLK(QC_U[3]), .R0(CNT_CLR), .R9(1'b0), .Q(QC_D));
 SN7490 C3(.CLK(QC_D[3]), .R0(CNT_CLR), .R9(1'b0), .Q(QC_H));
-SN7474 O4(.CLK(QC_H[3]), .nS(1'b1), .nR(~CNT_CLR), .D(1'b1), .Q(Q_OVF), .nQ());
+SN7474 O4(.CLK(QC_H[3]), .nS(1'b1), .nR(nCNT_CLR), .D(1'b1), .Q(Q_OVF), .nQ());
 
 //Latch
 SN7474_4 L1(.CLK(LD), .nCLR(1'b1), .D(QC_U), .Q(QU));
