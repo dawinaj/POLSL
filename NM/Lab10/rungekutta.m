@@ -1,14 +1,16 @@
 clear all
 clc
 e = 9;   % Upper boundaryof 0 <= x <= e
-h = 1; % step of our calculations
+h = 0.2; % step of our calculations
 d = 1.9; % the initial value of y => y(x0) = y0 = d
 
-%[Xs, Ys, Fxys, Dys] = Euler(0, e, d, h);
-
-[Xs, Ys, K, Dys] = Runge_Kutta(0, e, d, h) 
 
 hold on
+[Xs, Ys, Fxys, Dys] = Runge_Kutta(0, e, d, 1)
+plot(Xs, Ys)
+[Xs, Ys, Fxys, Dys] = Runge_Kutta(0, e, d, .1)
+plot(Xs, Ys)
+[Xs, Ys, Fxys, Dys] = Runge_Kutta(0, e, d, .01)
 plot(Xs, Ys)
 hold off
 
