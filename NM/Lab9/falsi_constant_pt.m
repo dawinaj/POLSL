@@ -35,3 +35,4 @@ function [x, n, c] =  regula_falsi(a, b, e)
         x = tempx - f(tempx)/(f(c) - f(tempx)) * (c-tempx); % nth iterations
     end
 end
+
