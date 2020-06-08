@@ -8,6 +8,8 @@ I = 10; % iterations
 
 
 iters = [2, 3, 4, 6, 8, 11, 16, 23, 32]
+steps = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+
 errors = zeros(2, length(iters));
 
 [xs, ~] = solve_rectangle(x, I, N, alpha);
@@ -59,12 +61,7 @@ ylabel('Y(X)')
 hold off
 
 
-
-
-
-steps = [2, 3, 4, 6, 8, 11, 16, 23, 32, 45, 64, 91, 128, 181, 256, 362, 512, 724, 1024]
 errors = zeros(2, length(steps));
-
 [xs, ~] = solve_rectangle(x, I, N, alpha);
 lapl = laplace(xs);
 
