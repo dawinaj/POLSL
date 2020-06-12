@@ -12,9 +12,14 @@ bndZMax = 0;
 
 [w, t, z] = net_method(tMax, zMin, zMax, h, r, a2, bndZMin, bndZMax)
 y = reference(t, z, a2)
+
+figure(1)
+subplot(1, 2, 1)
 surf(z, t, y)
 colormap(jet)
 shading interp
+subplot(1, 2, 2)
+contour(z, t, y)
 
 MSE = MS(y-w)
 
