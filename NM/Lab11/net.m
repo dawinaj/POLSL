@@ -16,6 +16,8 @@ surf(z, t, y)
 colormap(jet)
 shading interp
 
+MSE = MS(y-w)
+
 
 function [w, Ti, Zk] = net_method(tM, zm, zM, h, r, a2, bzm, bzM)
     [Ti, tc] = Nodes(0,  tM, h)
@@ -52,9 +54,14 @@ function y = reference(t, z, a2)
     end
 end
 
-
 % Separate interval into h-long pieces, return their borders and count
 function [nodes, count] = Nodes(a, b, h)
     nodes = a:h:b;
     count = length(nodes);
+end
+
+
+function m = MS(w)
+    w = w.^2;
+    m = mean(w, 'all');
 end
