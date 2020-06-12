@@ -11,8 +11,8 @@ bndZMin = 0;
 bndZMax = 0;
 
 [w, t, z] = net_method(tMax, zMin, zMax, h, r, a2, bndZMin, bndZMax)
-
-surf(z, t, w)
+y = reference(t, z, a2)
+surf(z, t, y)
 colormap(jet)
 shading interp
 
@@ -40,6 +40,18 @@ end
 function ret = wt0z(z)
     ret = sin(pi*z);
 end
+
+function y = reference(t, z, a2)
+    tc = length(t);
+    zc = length(z);
+    y = zeros(tc, zc);
+    for i = 1:tc
+        for k = 1:zc
+            y(i, k) = exp(-pi^2 * a2*t(i))*sin(pi*z(k));
+        end
+    end
+end
+
 
 % Separate interval into h-long pieces, return their borders and count
 function [nodes, count] = Nodes(a, b, h)
