@@ -1,4 +1,3 @@
-
 ; Task 1
 
 DSEG	AT	30h
@@ -13,18 +12,12 @@ RESET:
 ;--------------------------------	
 ;Here goes your solution
 ADD_M:
-	INC R7
-	MOV A, R7
-	JZ ADD_END
 	MOV A, @R0
 	ADDC A, @R1
-	MOV @R0, A
+	MOV @R1, A
 	INC R0
 	INC R1
-	DEC R7
-	LJMP ADD_M
-
-ADD_END:
+	DJNZ R7, ADD_M
 	RET
 
 ;--------------------------------
