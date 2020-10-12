@@ -12,33 +12,38 @@ RESET:
 ;--------------------------------	
 ;Here goes your solution
 ADD_M:
+	CLR C
+	INC R7
+	DJNZ R7, ADD_LOOP
+	RET
+ADD_LOOP:
 	MOV A, @R0
 	ADDC A, @R1
-	MOV @R1, A
+	MOV @R0, A
 	INC R0
 	INC R1
-	DJNZ R7, ADD_M
+	DJNZ R7, ADD_LOOP
 	RET
 
 ;--------------------------------
 
 MAIN:
-	MOV		SP,#7Fh	
-	MOV		DPTR,#TEST_DATA
+	MOV		SP, #7Fh	
+	MOV		DPTR, #TEST_DATA
 TEST_LP:	
-	MOV		R7,#9
-	MOV		R0,#ARG_0
+	MOV		R7, #9
+	MOV		R0, #ARG_0
 LD_LP:
 	CLR		A
-	MOVC	A,@A+DPTR
+	MOVC	A, @A+DPTR
 	MOV		@R0, A
 	INC		DPTR
 	INC		R0
 	DJNZ	R7, LD_LP
 	JZ		STOP
-	MOV		R0,#ARG_0
-	MOV		R1,#ARG_1
-	MOV		R7,ARG_SIZE	
+	MOV		R0, #ARG_0
+	MOV		R1, #ARG_1
+	MOV		R7, ARG_SIZE	
 	ACALL	ADD_M
 
 TEST_STEP:	
