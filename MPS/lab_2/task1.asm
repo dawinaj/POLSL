@@ -14,15 +14,15 @@ RESET:
 ADD_M:
 	CLR C
 	INC R7
-	DJNZ R7, ADD_LOOP
+	DJNZ R7, ADD_IN_LOOP ; check if number of bytes is not 0
 	RET
-ADD_LOOP:
+ADD_IN_LOOP:
 	MOV A, @R0
 	ADDC A, @R1
 	MOV @R0, A
 	INC R0
 	INC R1
-	DJNZ R7, ADD_LOOP
+	DJNZ R7, ADD_IN_LOOP
 	RET
 
 ;--------------------------------
