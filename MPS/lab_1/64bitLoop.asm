@@ -26,7 +26,7 @@ SETUP:
 	INC R3
 	INC R2
 	INC R1
-	INC R0 ; dont increment R0 to remove 0th loop (ultra expanding big brain)
+	INC R0
 	LJMP BIG_LOOP
 
 
