@@ -30,8 +30,8 @@ tableX2 = zeros(length(xs), 2);
 for X2 = 1:length(xs)
     for U2 = 1:length(vls)
         tableX2big((X2-1)*length(vls)+U2, 1) = xs(X2);
-        tableX2big((X2-1)*length(vls)+U2, 2) = vls(length(xs)-U2);
-        tableX2big((X2-1)*length(vls)+U2, 3) = prfts(3, length(xs)-U2);
+        tableX2big((X2-1)*length(vls)+U2, 2) = vls(length(vls)-U2+1);
+        tableX2big((X2-1)*length(vls)+U2, 3) = prfts(3, length(vls)-U2+1);
         tempval = tableX2big((X2-1)*length(vls)+U2, 1) - tableX2big((X2-1)*length(vls)+U2, 2);
         tableX2big((X2-1)*length(vls)+U2, 4) = tempval;
         index = find(xs == tableX2big((X2-1)*length(vls)+U2, 4), 1);
@@ -66,8 +66,8 @@ tableX1 = zeros(length(xs), 2);
 for X1 = 1:length(xs)
     for U1 = 1:length(vls)
         tableX1big((X1-1)*length(vls)+U1, 1) = xs(X1);
-        tableX1big((X1-1)*length(vls)+U1, 2) = vls(length(xs)-U1);
-        tableX1big((X1-1)*length(vls)+U1, 3) = prfts(2, length(xs)-U1);
+        tableX1big((X1-1)*length(vls)+U1, 2) = vls(length(vls)-U1+1);
+        tableX1big((X1-1)*length(vls)+U1, 3) = prfts(2, length(vls)-U1+1);
         tempval = tableX1big((X1-1)*length(vls)+U1, 1) - tableX1big((X1-1)*length(vls)+U1, 2);
         tableX1big((X1-1)*length(vls)+U1, 4) = tempval;
         index = find(xs == tableX1big((X1-1)*length(vls)+U1, 4), 1);
@@ -102,8 +102,8 @@ tableX0 = zeros(length(xs), 2);
 for X0 = 1:length(xs)
     for U0 = 1:length(vls)
         tableX0big((X0-1)*length(vls)+U0, 1) = xs(X0);
-        tableX0big((X0-1)*length(vls)+U0, 2) = vls(length(xs)-U0);
-        tableX0big((X0-1)*length(vls)+U0, 3) = prfts(1, length(xs)-U0);
+        tableX0big((X0-1)*length(vls)+U0, 2) = vls(length(vls)-U0+1);
+        tableX0big((X0-1)*length(vls)+U0, 3) = prfts(1, length(vls)-U0+1);
         tempval = tableX0big((X0-1)*length(vls)+U0, 1) - tableX0big((X0-1)*length(vls)+U0, 2);
         tableX0big((X0-1)*length(vls)+U0, 4) = tempval;
         index = find(xs == tableX0big((X0-1)*length(vls)+U0, 4), 1);
