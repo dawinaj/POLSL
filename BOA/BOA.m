@@ -31,6 +31,8 @@ world.setRegion(10, 10, 20, 10, true)
 world.setRegion(60, 10, 20, 10, true)
 world.setRegion(70, 70, 10, 20, true)
 
+% world.setRegion(29, 20, 1, 10, true)
+
 
 % figure
 % world.showTerrain();
