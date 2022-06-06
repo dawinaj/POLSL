@@ -137,7 +137,7 @@ classdef World < handle
             arguments
                 W    (1,1) World  {}
             end
-            f = 0.2;
+            f = 0.5;
             W.Grd = (1-f) * fillmissing(W.Frc, "linear") + f * fillmissing(W.Nav, "linear");
 
             W.Grd = W.Grd ./ abs(W.Grd);
@@ -166,25 +166,25 @@ classdef World < handle
                 clCt = [W.y2h(cuCl(1)), W.x2w(cuCl(2))];
 
                 wy = 1-W.m2c(abs(sPos(1)-clCt(1)));
-                wx = 1-W.m2c(abs(sPos(1)-clCt(1)));
+                wx = 1-W.m2c(abs(sPos(2)-clCt(2)));
+            
+                currDir = W.Grd(W.yb(cuCl(1)), W.xb(cuCl(2)))*wy*wx;
 
-%                 currDir = W.Grd(W.h2y(sPos(1)), W.w2x(sPos(2)))
-                
                 if sPos(1) >= clCt(1)
                     if sPos(2) >= clCt(2)
 %                         disp('Y> , X>');
-                        currDir = W.Grd(W.yb(cuCl(1)), W.yb(cuCl(2)))*wy*wx + W.Grd(W.yb(cuCl(1)+1), W.yb(cuCl(2)+1))*(1-wy)*(1-wx) + W.Grd(W.yb(cuCl(1)+1), W.yb(cuCl(2)))*(1-wy)*wx + W.Grd(W.yb(cuCl(1)), W.yb(cuCl(2)+1))*wy*(1-wx);
+                        currDir = currDir + W.Grd(W.yb(cuCl(1)+1), W.xb(cuCl(2)+1))*(1-wy)*(1-wx) + W.Grd(W.yb(cuCl(1)+1), W.xb(cuCl(2)))*(1-wy)*wx + W.Grd(W.yb(cuCl(1)), W.xb(cuCl(2)+1))*wy*(1-wx);
                     else
 %                         disp('Y> , X<');
-                        currDir = W.Grd(W.yb(cuCl(1)), W.yb(cuCl(2)))*wy*wx + W.Grd(W.yb(cuCl(1)+1), W.yb(cuCl(2)-1))*(1-wy)*(1-wx) + W.Grd(W.yb(cuCl(1)+1), W.yb(cuCl(2)))*(1-wy)*wx + W.Grd(W.yb(cuCl(1)), W.yb(cuCl(2)-1))*wy*(1-wx);
+                        currDir = currDir + W.Grd(W.yb(cuCl(1)+1), W.xb(cuCl(2)-1))*(1-wy)*(1-wx) + W.Grd(W.yb(cuCl(1)+1), W.xb(cuCl(2)))*(1-wy)*wx + W.Grd(W.yb(cuCl(1)), W.xb(cuCl(2)-1))*wy*(1-wx);
                     end
                 else
                     if sPos(2) >= clCt(2)
 %                         disp('Y< , X>');
-                        currDir = W.Grd(W.yb(cuCl(1)), W.yb(cuCl(2)))*wy*wx + W.Grd(W.yb(cuCl(1)-1), W.yb(cuCl(2)+1))*(1-wy)*(1-wx) + W.Grd(W.yb(cuCl(1)-1), W.yb(cuCl(2)))*(1-wy)*wx + W.Grd(W.yb(cuCl(1)), W.yb(cuCl(2)+1))*wy*(1-wx);
+                        currDir = currDir + W.Grd(W.yb(cuCl(1)-1), W.xb(cuCl(2)+1))*(1-wy)*(1-wx) + W.Grd(W.yb(cuCl(1)-1), W.xb(cuCl(2)))*(1-wy)*wx + W.Grd(W.yb(cuCl(1)), W.xb(cuCl(2)+1))*wy*(1-wx);
                     else
 %                         disp('Y< , X<');
-                        currDir = W.Grd(W.yb(cuCl(1)), W.yb(cuCl(2)))*wy*wx + W.Grd(W.yb(cuCl(1)-1), W.yb(cuCl(2)-1))*(1-wy)*(1-wx) + W.Grd(W.yb(cuCl(1)-1), W.yb(cuCl(2)))*(1-wy)*wx + W.Grd(W.yb(cuCl(1)), W.yb(cuCl(2)-1))*wy*(1-wx);
+                        currDir = currDir + W.Grd(W.yb(cuCl(1)-1), W.xb(cuCl(2)-1))*(1-wy)*(1-wx) + W.Grd(W.yb(cuCl(1)-1), W.xb(cuCl(2)))*(1-wy)*wx + W.Grd(W.yb(cuCl(1)), W.xb(cuCl(2)-1))*wy*(1-wx);
                     end
                 end
 
@@ -202,7 +202,7 @@ classdef World < handle
                 sPos = sPos + step * [imag(currDir), real(currDir)];
                 
             end
-             W.Pth = [W.Pth; fPos];
+            W.Pth = [W.Pth; fPos];
         end
 
 
